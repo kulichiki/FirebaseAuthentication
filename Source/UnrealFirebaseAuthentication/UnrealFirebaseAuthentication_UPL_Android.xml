@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+
+  <prebuildCopies>
+    <copyFile src="$S(PluginDir)/../../../../Build/Android/google-services.json" dst="$S(BuildDir)/gradle/app/google-services.json"/>
+  </prebuildCopies>
+  
+  <androidManifestUpdates>
+    <addPermission android:name="android.permission.INTERNET" />
+  </androidManifestUpdates>
+  
+	<AARImports>
+		<insertValue value="com.google.firebase,firebase-analytics,11.8.0" />
+    <insertNewline/>
+	</AARImports>
+
+  <buildscriptGradleAdditions>
+    <insert>
+      dependencies
+      {
+        classpath 'com.google.gms:google-services:4.0.0'
+      }
+    </insert>
+  </buildscriptGradleAdditions>
+
+  <buildGradleAdditions>
+    <insertValue value="apply plugin: 'com.google.gms.google-services'"/>
+  </buildGradleAdditions>
+
+  <gameActivityImportAdditions>
+    <insert>
+      
+    </insert>
+  </gameActivityImportAdditions>
+
+  <gameActivityClassAdditions>
+    <insert>
+      
+    </insert>
+  </gameActivityClassAdditions>
+
+</root>
