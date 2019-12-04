@@ -2,7 +2,8 @@
 <root xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
   <prebuildCopies>
-    <copyFile src="$S(PluginDir)/../../../../Build/Android/google-services.json" dst="$S(BuildDir)/gradle/app/google-services.json"/>
+    <copyFile src="$S(PluginDir)/../../../../Build/Android/google-services.json" 
+              dst="$S(BuildDir)/gradle/app/google-services.json"/>
   </prebuildCopies>
   
   <androidManifestUpdates>
@@ -33,10 +34,107 @@
     </insert>
   </gameActivityImportAdditions>
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <gameActivityClassAdditions>
     <insert>
+      private final int GOOGLE_SIGNIN_RC = 9001;
+      
+      private FirebaseAuth Auth;
+      private GoogleSignInClient SignInClient;
+      
+      
+      private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
+      {
+          AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
+          Auth.signInWithCredential(Credential).addOnCompleteListener(this, Task ->
+          {
+              if (Task.isSuccessful())
+              {
+                  // Sign in success, update UI with the signed-in user's information
+                  FirebaseUser User = Auth.getCurrentUser();
+              }
+              else 
+              {
+                  // If sign in fails, display a message to the user.
+              }
+          });
+      }
+      
+      private void AndroidThunkJava_GoogleSignIn()
+      {
+          Intent SignInIntent = SignInClient.getSignInIntent();
+          startActivityForResult(SignInIntent, GOOGLE_SIGNIN_RC);
+      }
+
+      private void AndroidThunkJava_GoogleSignOut()
+      {
+          Auth.signOut();
+
+          // Google sign out
+          SignInClient.signOut().addOnCompleteListener(this, Task ->
+          {
+              // Complete
+          });
+      }
+
+      private void AndroidThunkJava_GoogleRevokeAccess()
+      {
+          // Firebase sign out
+          Auth.signOut();
+
+          // Google revoke access
+          SignInClient.revokeAccess().addOnCompleteListener(this, Task ->
+          {
+              // Complete
+          });
+      }
       
     </insert>
   </gameActivityClassAdditions>
+
+  
+  
+  
+  <gameActivityOnCreateAdditions>
+    <insert>
+      GoogleSignInOptions SignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                          .requestIdToken(getString(R.string.default_web_client_id))
+                                          .requestEmail()
+                                          .build();
+      SignInClient = GoogleSignIn.getClient(this, SignInOptions);
+      Auth = FirebaseAuth.getInstance();
+    </insert>
+  </gameActivityOnCreateAdditions>
+
+  
+  
+  
+  
+  
+  <gameActivityOnActivityResultAdditions>
+    <insert>
+      if (requestCode == GOOGLE_SIGNIN_RC)
+      {
+          Task<GoogleSignInAccount> Task = GoogleSignIn.getSignedInAccountFromIntent(data);
+          try
+          {
+              GoogleSignInAccount SignInAccount = Task.getResult(ApiException.class);
+              FirebaseAuthWithGoogle(SignInAccount);
+          }
+          catch (ApiException e)
+          {
+              updateUI(null);
+          }
+      }
+    </insert>
+  </gameActivityOnActivityResultAdditions>
 
 </root>
