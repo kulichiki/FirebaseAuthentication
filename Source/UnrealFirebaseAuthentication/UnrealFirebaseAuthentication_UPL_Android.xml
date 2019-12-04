@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<root xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<root xmlns:android="http://schemas.android.com/apk/res/android" 
+      xmlns:tools="http://schemas.android.com/tools">
+
+  <init>
+    <setStringFromProperty result="PackageName" 
+                           ini="Engine" 
+                           section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" 
+                           property="PackageName" 
+                           default=""/>
+  </init>
 
   <prebuildCopies>
     <copyFile src="$S(PluginDir)/../../../../Build/Android/google-services.json" 
@@ -11,9 +20,12 @@
   </androidManifestUpdates>
   
 	<AARImports>
-		<insertValue value="com.google.firebase,firebase-analytics,11.8.0" />
+    <insertValue value="com.google.firebase,firebase-core,11.8.0" />
     <insertNewline/>
-	</AARImports>
+
+    <insertValue value="com.google.firebase,firebase-auth,11.8.0" />
+    <insertNewline/>
+  </AARImports>
 
   <buildscriptGradleAdditions>
     <insert>
@@ -23,22 +35,31 @@
       }
     </insert>
   </buildscriptGradleAdditions>
-
-  <buildGradleAdditions>
-    <insertValue value="apply plugin: 'com.google.gms.google-services'"/>
-  </buildGradleAdditions>
+  
+  
 
   <gameActivityImportAdditions>
+    <insertValue value="import $S(PackageName).R;" />
+    <insertNewline/>
+
     <insert>
-      
+      import android.support.annotation.NonNull;
+
+      import com.google.android.gms.auth.api.signin.GoogleSignIn;
+      import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+      import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+      import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+      import com.google.android.gms.tasks.OnCompleteListener;
+      import com.google.android.gms.tasks.Task;
+      import com.google.android.gms.common.api.ApiException;
+
+      import com.google.firebase.auth.AuthCredential;
+      import com.google.firebase.auth.AuthResult;
+      import com.google.firebase.auth.FirebaseAuth;
+      import com.google.firebase.auth.GoogleAuthProvider;
     </insert>
   </gameActivityImportAdditions>
 
-  
-  
-  
-  
-  
   
   
   
@@ -50,20 +71,22 @@
       private FirebaseAuth Auth;
       private GoogleSignInClient SignInClient;
       
-      
       private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
       {
           AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
-          Auth.signInWithCredential(Credential).addOnCompleteListener(this, Task ->
+          Auth.signInWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
           {
-              if (Task.isSuccessful())
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
               {
-                  // Sign in success, update UI with the signed-in user's information
-                  FirebaseUser User = Auth.getCurrentUser();
-              }
-              else 
-              {
-                  // If sign in fails, display a message to the user.
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success, update UI with the signed-in user's information
+                  }
+                  else 
+                  {
+                      // If sign in fails, display a message to the user.
+                  }
               }
           });
       }
@@ -79,9 +102,13 @@
           Auth.signOut();
 
           // Google sign out
-          SignInClient.signOut().addOnCompleteListener(this, Task ->
+          SignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener&lt;Void&gt;()
           {
-              // Complete
+              @Override
+              public void onComplete(@NonNull Task&lt;Void&gt; Task)
+              {
+                  // Complete
+              }
           });
       }
 
@@ -91,15 +118,24 @@
           Auth.signOut();
 
           // Google revoke access
-          SignInClient.revokeAccess().addOnCompleteListener(this, Task ->
+          SignInClient.revokeAccess().addOnCompleteListener(this, new OnCompleteListener&lt;Void&gt;()
           {
-              // Complete
+              @Override
+              public void onComplete(@NonNull Task&lt;Void&gt; Task)
+              {
+                  // Complete
+              }
           });
       }
       
     </insert>
   </gameActivityClassAdditions>
 
+  
+  
+  
+  
+  
   
   
   
@@ -119,11 +155,13 @@
   
   
   
+  
+  
   <gameActivityOnActivityResultAdditions>
     <insert>
       if (requestCode == GOOGLE_SIGNIN_RC)
       {
-          Task<GoogleSignInAccount> Task = GoogleSignIn.getSignedInAccountFromIntent(data);
+          Task&lt;GoogleSignInAccount&gt; Task = GoogleSignIn.getSignedInAccountFromIntent(data);
           try
           {
               GoogleSignInAccount SignInAccount = Task.getResult(ApiException.class);
@@ -131,7 +169,6 @@
           }
           catch (ApiException e)
           {
-              updateUI(null);
           }
       }
     </insert>
