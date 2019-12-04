@@ -27,6 +27,11 @@
     <insertNewline/>
   </AARImports>
 
+  <buildGradleAdditions>
+    <insertValue value="apply plugin: 'com.google.gms.google-services'"/>
+    <insertNewline/>
+  </buildGradleAdditions>
+
   <buildscriptGradleAdditions>
     <insert>
       dependencies
