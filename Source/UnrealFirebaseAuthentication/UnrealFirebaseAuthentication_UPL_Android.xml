@@ -76,6 +76,10 @@
       private FirebaseAuth Auth;
       private GoogleSignInClient SignInClient;
       
+      private native void NativeGoogleSignInResult(int StatusCode);
+      private native void NativeGoogleSignOutResult(int StatusCode);
+      private native void NativeGoogleRevokeAccessResult(int StatusCode);
+      
       private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
       {
           AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
@@ -86,10 +90,14 @@
               {
                   if (Task.isSuccessful())
                   {
+                      NativeGoogleSignOutResult(0);
                       // Sign in success, update UI with the signed-in user's information
                   }
                   else 
                   {
+                      // Check if canceled
+                      NativeGoogleSignOutResult(13);
+                      
                       // If sign in fails, display a message to the user.
                   }
               }
@@ -112,7 +120,7 @@
               @Override
               public void onComplete(@NonNull Task&lt;Void&gt; Task)
               {
-                  // Complete
+                  NativeGoogleSignOutResult(0);
               }
           });
       }
@@ -128,7 +136,7 @@
               @Override
               public void onComplete(@NonNull Task&lt;Void&gt; Task)
               {
-                  // Complete
+                  NativeGoogleRevokeAccessResult(0);
               }
           });
       }
@@ -174,6 +182,7 @@
           }
           catch (ApiException e)
           {
+              NativeGoogleSignInResult(e.getStatusCode());
           }
       }
     </insert>

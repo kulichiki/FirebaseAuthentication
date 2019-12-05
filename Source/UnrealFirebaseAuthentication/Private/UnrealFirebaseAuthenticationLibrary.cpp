@@ -1,4 +1,5 @@
 #include "UnrealFirebaseAuthenticationLibrary.h"
+#include "Engine.h"
 
 #if PLATFORM_ANDROID
 	#include "Android/AndroidJNI.h"
@@ -15,3 +16,16 @@ void UUnrealFirebaseAuthenticationLibrary::GoogleSignIn()
 	}
 #endif
 }
+
+void UUnrealFirebaseAuthenticationLibrary::Print(int Code)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(Code));
+}
+
+#if PLATFORM_ANDROID
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_NativeGoogleSignInResult(JNIEnv* jenv, jobject thiz, jint StatusCode)
+{
+	int Code = StatusCode;
+	UUnrealFirebaseAuthenticationLibrary::Print(Code);
+}
+#endif

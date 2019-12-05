@@ -12,4 +12,7 @@ class UUnrealFirebaseAuthenticationLibrary : public UBlueprintFunctionLibrary
 public:
 	UFUNCTION(BlueprintCallable)
 	static void GoogleSignIn();
+
+	UFUNCTION(BlueprintCallable)
+	static void Print(int Code);
 };
