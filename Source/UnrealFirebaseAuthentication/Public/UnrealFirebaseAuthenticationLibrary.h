@@ -8,11 +8,4 @@ UCLASS()
 class UUnrealFirebaseAuthenticationLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintCallable)
-	static void GoogleSignIn();
-
-	UFUNCTION(BlueprintCallable)
-	static void Print(int Code);
 };

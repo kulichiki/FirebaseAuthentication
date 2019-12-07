@@ -71,7 +71,7 @@
   
   <gameActivityClassAdditions>
     <insert>
-      private final int GOOGLE_SIGNIN_RC = 9001;
+      private static final int GOOGLE_SIGNIN_RC = 9001;
       
       private FirebaseAuth Auth;
       private GoogleSignInClient SignInClient;
