@@ -5,6 +5,7 @@
 #include "Modules/ModuleManager.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FSignInResult, int);
+DECLARE_MULTICAST_DELEGATE(FSignOutResult);
 
 class FUnrealFirebaseAuthenticationModule : public IModuleInterface
 {
@@ -14,4 +15,5 @@ public:
 	static FUnrealFirebaseAuthenticationModule* GetModule();
 
 	FSignInResult SignInResult;
+	FSignOutResult SignOutResult;
 };

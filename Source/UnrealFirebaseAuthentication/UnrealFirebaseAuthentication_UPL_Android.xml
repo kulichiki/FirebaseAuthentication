@@ -57,6 +57,7 @@
       import com.google.android.gms.tasks.OnCompleteListener;
       import com.google.android.gms.tasks.Task;
       import com.google.android.gms.common.api.ApiException;
+      import com.google.android.gms.common.api.CommonStatusCodes;
 
       import com.google.firebase.auth.AuthCredential;
       import com.google.firebase.auth.AuthResult;
@@ -77,8 +78,8 @@
       private GoogleSignInClient SignInClient;
       
       private native void NativeGoogleSignInResult(int StatusCode);
-      private native void NativeGoogleSignOutResult(int StatusCode);
-      private native void NativeGoogleRevokeAccessResult(int StatusCode);
+      private native void NativeGoogleSignOutResult();
+      private native void NativeGoogleRevokeAccessResult();
       
       private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
       {
@@ -90,15 +91,12 @@
               {
                   if (Task.isSuccessful())
                   {
-                      NativeGoogleSignOutResult(0);
-                      // Sign in success, update UI with the signed-in user's information
+                      // Sign in success,
+                      NativeGoogleSignInResult(CommonStatusCodes.SUCCESS);
                   }
                   else 
                   {
-                      // Check if canceled
-                      NativeGoogleSignOutResult(13);
-                      
-                      // If sign in fails, display a message to the user.
+                      NativeGoogleSignInResult(CommonStatusCodes.ERROR);
                   }
               }
           });
@@ -120,7 +118,7 @@
               @Override
               public void onComplete(@NonNull Task&lt;Void&gt; Task)
               {
-                  NativeGoogleSignOutResult(0);
+                  NativeGoogleSignOutResult();
               }
           });
       }
@@ -136,7 +134,7 @@
               @Override
               public void onComplete(@NonNull Task&lt;Void&gt; Task)
               {
-                  NativeGoogleRevokeAccessResult(0);
+                  NativeGoogleRevokeAccessResult();
               }
           });
       }

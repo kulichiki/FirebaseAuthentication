@@ -27,7 +27,11 @@ void UGoogleSignIn::Activate()
 
 void UGoogleSignIn::SignInResult(int StatusCode)
 {
-	OnSuccess.Broadcast(StatusCode);
+	EStatusCode Code = EStatusCode(StatusCode);
+	if (Code == EStatusCode::SUCCESS)
+		OnSuccess.Broadcast(Code);
+	else
+		OnFailure.Broadcast(Code);
 }
 
 #if PLATFORM_ANDROID

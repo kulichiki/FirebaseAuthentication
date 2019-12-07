@@ -10,8 +10,6 @@ class UNREALFIREBASEAUTHENTICATION_API USignInBase : public UBlueprintAsyncActio
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static USignInBase* SignIn();
 	void Activate() override;
 
 private:
