@@ -1,4 +1,4 @@
-#include "SignOutBase.h"
+#include "Result.h"
 #include "UnrealFirebaseAuthentication.h"
 
 #if PLATFORM_ANDROID
@@ -6,13 +6,13 @@
 	#include "Android/AndroidApplication.h"
 #endif
 
-void USignOutBase::Activate()
+void UResult::Activate()
 {
 #if PLATFORM_ANDROID
 	if (FUnrealFirebaseAuthenticationModule* Module = FUnrealFirebaseAuthenticationModule::GetModule())
 	{
-		Module->SignOutResult.Clear();
-		Module->SignOutResult.AddUObject(this, &USignOutBase::SignOutResult);
+		Module->Result.Clear();
+		Module->Result.AddUObject(this, &UResult::Result);
 	}
 #endif
 }

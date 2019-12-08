@@ -1,23 +1,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SignOutBase.h"
-#include "GoogleSignOut.h"
-#include "GoogleRevokeAccess.generated.h"
+#include "Result.h"
+#include "GoogleSignOut.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGoogleSignOutResult);
 
 UCLASS()
-class UNREALFIREBASEAUTHENTICATION_API UGoogleRevokeAccess : public USignOutBase
+class UNREALFIREBASEAUTHENTICATION_API UGoogleSignOut : public UResult
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UGoogleRevokeAccess* GoogleRevokeAccess();
+	static UGoogleSignOut* GoogleSignOut();
 	void Activate() override;
 
 	UPROPERTY(BlueprintAssignable)
 	FGoogleSignOutResult OnSuccess;
 
 private:
-	void SignOutResult() override;
+	void Result() override;
 };

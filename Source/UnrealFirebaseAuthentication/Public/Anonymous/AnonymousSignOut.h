@@ -1,13 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SignOutBase.h"
+#include "Result.h"
 #include "AnonymousSignOut.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAnonymousSignOutResult);
 
 UCLASS()
-class UNREALFIREBASEAUTHENTICATION_API UAnonymousSignOut : public USignOutBase
+class UNREALFIREBASEAUTHENTICATION_API UAnonymousSignOut : public UResult
 {
 	GENERATED_BODY()
 
@@ -20,5 +20,5 @@ public:
 	FAnonymousSignOutResult OnSuccess;
 
 private:
-	void SignOutResult() override;
+	void Result() override;
 };

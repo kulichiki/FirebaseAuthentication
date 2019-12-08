@@ -63,6 +63,7 @@
       import com.google.firebase.auth.AuthResult;
       import com.google.firebase.auth.FirebaseAuth;
       import com.google.firebase.auth.GoogleAuthProvider;
+      import com.google.firebase.auth.EmailAuthProvider;
     </insert>
   </gameActivityImportAdditions>
 
@@ -135,10 +136,10 @@
           {
               @Override
               public void onComplete(@NonNull Task&lt;Void&gt; Task)
-              {
-                  NativeGoogleRevokeAccessResult();
-              }
-          });
+      {
+      NativeGoogleRevokeAccessResult();
+      }
+      });
       }
 
 
@@ -148,13 +149,13 @@
 
 
 
-      private native void NativeAnonymouslyLinkAccountResult();
+      private native void NativeAnonymouslyLinkAccountResult(int StatusCode);
       private native void NativeAnonymouslySignInResult(int StatusCode);
       private native void NativeAnonymouslySignOutResult();
 
       private void AndroidThunkJava_AnonymouslySignIn()
       {
-          Auth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+      Auth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
           {
               @Override
               public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)

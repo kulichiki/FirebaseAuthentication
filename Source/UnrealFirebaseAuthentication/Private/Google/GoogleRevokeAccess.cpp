@@ -24,7 +24,7 @@ void UGoogleRevokeAccess::Activate()
 #endif
 }
 
-void UGoogleRevokeAccess::SignOutResult()
+void UGoogleRevokeAccess::Result()
 {
 	OnSuccess.Broadcast();
 }
@@ -34,8 +34,8 @@ JNI_METHOD void Java_com_epicgames_ue4_GameActivity_NativeGoogleRevokeAccessResu
 {
 	if (FUnrealFirebaseAuthenticationModule* Module = FUnrealFirebaseAuthenticationModule::GetModule())
 	{
-		Module->SignOutResult.Broadcast();
-		Module->SignOutResult.Clear();
+		Module->Result.Broadcast();
+		Module->Result.Clear();
 	}
 }
 #endif

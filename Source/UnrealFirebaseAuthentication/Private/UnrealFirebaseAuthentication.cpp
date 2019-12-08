@@ -2,13 +2,8 @@
 
 #define LOCTEXT_NAMESPACE "FUnrealFirebaseAuthenticationModule"
 
-void FUnrealFirebaseAuthenticationModule::StartupModule()
-{
-}
-
-void FUnrealFirebaseAuthenticationModule::ShutdownModule()
-{
-}
+void FUnrealFirebaseAuthenticationModule::StartupModule() {}
+void FUnrealFirebaseAuthenticationModule::ShutdownModule() {}
 
 FUnrealFirebaseAuthenticationModule* FUnrealFirebaseAuthenticationModule::GetModule()
 {
@@ -16,5 +11,5 @@ FUnrealFirebaseAuthenticationModule* FUnrealFirebaseAuthenticationModule::GetMod
 }
 
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FUnrealFirebaseAuthenticationModule, UnrealFirebaseAuthentication)

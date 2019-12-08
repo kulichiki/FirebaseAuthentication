@@ -28,9 +28,8 @@ enum class ECommonStatusCode : uint8
 	SIGN_IN_FAILED					= 22	UMETA(DisplayName = "Sign In Failed")
 };
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOtherResult, int);
-DECLARE_MULTICAST_DELEGATE_OneParam(FSignInResult, int);
-DECLARE_MULTICAST_DELEGATE(FSignOutResult);
+DECLARE_MULTICAST_DELEGATE_OneParam(FResultCode, int);
+DECLARE_MULTICAST_DELEGATE(FResult);
 
 class FUnrealFirebaseAuthenticationModule : public IModuleInterface
 {
@@ -39,7 +38,6 @@ public:
 	void ShutdownModule() override;
 	static FUnrealFirebaseAuthenticationModule* GetModule();
 
-	FOtherResult OtherResult;
-	FSignInResult SignInResult;
-	FSignOutResult SignOutResult;
+	FResultCode ResultCode;
+	FResult Result;
 };

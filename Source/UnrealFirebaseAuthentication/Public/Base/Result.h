@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
-#include "SignOutBase.generated.h"
+#include "Result.generated.h"
 
 UCLASS()
-class UNREALFIREBASEAUTHENTICATION_API USignOutBase : public UBlueprintAsyncActionBase
+class UNREALFIREBASEAUTHENTICATION_API UResult : public UBlueprintAsyncActionBase
 {
 	GENERATED_BODY()
 	
@@ -13,5 +13,5 @@ public:
 	void Activate() override;
 
 private:
-	virtual void SignOutResult() {};
+	virtual void Result() {};
 };

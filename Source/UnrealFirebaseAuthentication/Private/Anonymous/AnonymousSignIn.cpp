@@ -1,4 +1,4 @@
-#include "GoogleSignIn.h"
+#include "AnonymousSignIn.h"
 #include "UnrealFirebaseAuthentication.h"
 
 #if PLATFORM_ANDROID
@@ -6,25 +6,25 @@
 	#include "Android/AndroidApplication.h"
 #endif
 
-UGoogleSignIn* UGoogleSignIn::GoogleSignIn()
+UAnonymousSignIn* UAnonymousSignIn::AnonymousSignIn()
 {
-	return NewObject<UGoogleSignIn>();
+	return NewObject<UAnonymousSignIn>();
 }
 
-void UGoogleSignIn::Activate()
+void UAnonymousSignIn::Activate()
 {
 	Super::Activate();
-	
+
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_GoogleSignIn", "()V", false);
+		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_AnonymouslySignIn", "()V", false);
 		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID);
 	}
 #endif
 }
 
-void UGoogleSignIn::SignInResult(int StatusCode)
+void UAnonymousSignIn::ResultCode(int StatusCode)
 {
 	ECommonStatusCode Code = ECommonStatusCode(StatusCode);
 	if (StatusCode == 12500)
@@ -38,12 +38,12 @@ void UGoogleSignIn::SignInResult(int StatusCode)
 }
 
 #if PLATFORM_ANDROID
-JNI_METHOD void Java_com_epicgames_ue4_GameActivity_NativeGoogleSignInResult(JNIEnv* jenv, jobject thiz, jint StatusCode)
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_NativeAnonymouslySignInResult(JNIEnv* jenv, jobject thiz, jint StatusCode)
 {
 	if (FUnrealFirebaseAuthenticationModule* Module = FUnrealFirebaseAuthenticationModule::GetModule())
 	{
-		Module->SignInResult.Broadcast(StatusCode);
-		Module->SignInResult.Clear();
+		Module->ResultCode.Broadcast(StatusCode);
+		Module->ResultCode.Clear();
 	}
 }
 #endif

@@ -1,14 +1,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SignInBase.h"
+#include "ResultCode.h"
 #include "UnrealFirebaseAuthentication.h"
 #include "AnonymousSignIn.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAnonymousSignInResult, ECommonStatusCode, StatusCode);
 
 UCLASS()
-class UNREALFIREBASEAUTHENTICATION_API UAnonymousSignIn : public USignInBase
+class UNREALFIREBASEAUTHENTICATION_API UAnonymousSignIn : public UResultCode
 {
 	GENERATED_BODY()
 
@@ -21,5 +21,5 @@ public:
 	FAnonymousSignInResult OnResult;
 
 private:
-	void SignInResult(int StatusCode) override;
+	void ResultCode(int StatusCode) override;
 };

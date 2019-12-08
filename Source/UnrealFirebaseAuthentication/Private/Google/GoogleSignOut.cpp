@@ -23,7 +23,7 @@ void UGoogleSignOut::Activate()
 #endif
 }
 
-void UGoogleSignOut::SignOutResult()
+void UGoogleSignOut::Result()
 {
 	OnSuccess.Broadcast();
 }
@@ -33,8 +33,8 @@ JNI_METHOD void Java_com_epicgames_ue4_GameActivity_NativeGoogleSignOutResult(JN
 {
 	if (FUnrealFirebaseAuthenticationModule* Module = FUnrealFirebaseAuthenticationModule::GetModule())
 	{
-		Module->SignOutResult.Broadcast();
-		Module->SignOutResult.Clear();
+		Module->Result.Broadcast();
+		Module->Result.Clear();
 	}
 }
 #endif
