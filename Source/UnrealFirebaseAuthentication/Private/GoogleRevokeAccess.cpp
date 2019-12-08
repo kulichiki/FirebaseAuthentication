@@ -8,8 +8,7 @@
 
 UGoogleRevokeAccess* UGoogleRevokeAccess::GoogleRevokeAccess()
 {
-	UGoogleRevokeAccess* BlueprintNode = NewObject<UGoogleRevokeAccess>();
-	return BlueprintNode;
+	return NewObject<UGoogleRevokeAccess>();
 }
 
 void UGoogleRevokeAccess::Activate()

@@ -1,35 +1,35 @@
-#include "GoogleSignOut.h"
+#include "AnonymousSignOut.h"
 
 #if PLATFORM_ANDROID
 	#include "Android/AndroidJNI.h"
 	#include "Android/AndroidApplication.h"
 #endif
 
-UGoogleSignOut* UGoogleSignOut::GoogleSignOut()
+UAnonymousSignOut* UAnonymousSignOut::AnonymousSignOut()
 {
-	return NewObject<UGoogleSignOut>();
+	return NewObject<UAnonymousSignOut>();
 }
 
-void UGoogleSignOut::Activate()
+void UAnonymousSignOut::Activate()
 {
 	Super::Activate();
 
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_GoogleSignOut", "()V", false);
+		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_AnonymouslySignOut", "()V", false);
 		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID);
 	}
 #endif
 }
 
-void UGoogleSignOut::SignOutResult()
+void UAnonymousSignOut::SignOutResult()
 {
 	OnSuccess.Broadcast();
 }
 
 #if PLATFORM_ANDROID
-JNI_METHOD void Java_com_epicgames_ue4_GameActivity_NativeGoogleSignOutResult(JNIEnv* jenv, jobject thiz)
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_NativeAnonymouslySignOutResult(JNIEnv* jenv, jobject thiz)
 {
 	if (FUnrealFirebaseAuthenticationModule* Module = FUnrealFirebaseAuthenticationModule::GetModule())
 	{
