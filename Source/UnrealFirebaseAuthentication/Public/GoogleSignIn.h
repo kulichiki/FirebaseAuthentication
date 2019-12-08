@@ -5,25 +5,30 @@
 #include "GoogleSignIn.generated.h"
 
 UENUM(BlueprintType)
-enum class EStatusCode : uint8
+enum class ECommonStatusCode : uint8
 {
-	API_NOT_CONNECTED				= 17,
-	CANCELED						= 16,
-	DEVELOPER_ERROR					= 10,
-	ERROR							= 13,
-	INTERNAL_ERROR					= 8,
-	INTERRUPTED						= 14,
-	INVALID_ACCOUNT					= 5,
-	NETWORK_ERROR					= 7,
-	RESOLUTION_REQUIRED				= 6,
-	SERVICE_DISABLED				= 3,
-	SERVICE_VERSION_UPDATE_REQUIRED = 2,
-	SIGN_IN_REQUIRED				= 4,
-	SUCCESS							= 0,
-	TIMEOUT							= 15
+	SUCCESS							= 0		UMETA(DisplayName = "Success"),
+	SERVICE_VERSION_UPDATE_REQUIRED = 2		UMETA(DisplayName = "Service Version Update Required"),
+	SERVICE_DISABLED				= 3		UMETA(DisplayName = "Service Disabled"),
+	SIGN_IN_REQUIRED				= 4		UMETA(DisplayName = "Sign In Required"),
+	INVALID_ACCOUNT					= 5		UMETA(DisplayName = "Invalid Account"),
+	RESOLUTION_REQUIRED				= 6		UMETA(DisplayName = "Resolution Required"),
+	NETWORK_ERROR					= 7		UMETA(DisplayName = "Network Error"),
+	INTERNAL_ERROR					= 8		UMETA(DisplayName = "Internal Error"),
+	DEVELOPER_ERROR					= 10	UMETA(DisplayName = "Developer Error"),
+	ERROR							= 13	UMETA(DisplayName = "Error"),
+	INTERRUPTED						= 14	UMETA(DisplayName = "Interrupted"),
+	TIMEOUT							= 15	UMETA(DisplayName = "Timeout"),
+	CANCELED						= 16	UMETA(DisplayName = "Canceled"),
+	API_NOT_CONNECTED				= 17	UMETA(DisplayName = "API Not Connected"),
+	
+	// Additional
+	SIGN_IN_CANCELLED				= 20	UMETA(DisplayName = "Sign In Cancelled"),
+	SIGN_IN_CURRENTLY_IN_PROGRESS	= 21	UMETA(DisplayName = "Sign In Currently In Progress"),
+	SIGN_IN_FAILED					= 22	UMETA(DisplayName = "Sign In Failed")
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGoogleSignInResult, EStatusCode, StatusCode);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGoogleSignInResult, ECommonStatusCode, StatusCode);
 
 UCLASS()
 class UNREALFIREBASEAUTHENTICATION_API UGoogleSignIn : public USignInBase
@@ -36,10 +41,7 @@ public:
 	void Activate() override;
 
 	UPROPERTY(BlueprintAssignable)
-	FGoogleSignInResult OnSuccess;
-	
-	UPROPERTY(BlueprintAssignable)
-	FGoogleSignInResult OnFailure;
+	FGoogleSignInResult OnResult;
 
 private:
 	void SignInResult(int StatusCode) override;

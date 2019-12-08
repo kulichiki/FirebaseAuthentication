@@ -27,11 +27,15 @@ void UGoogleSignIn::Activate()
 
 void UGoogleSignIn::SignInResult(int StatusCode)
 {
-	EStatusCode Code = EStatusCode(StatusCode);
-	if (Code == EStatusCode::SUCCESS)
-		OnSuccess.Broadcast(Code);
+	ECommonStatusCode Code = ECommonStatusCode(StatusCode);
+	if (StatusCode == 12500)
+		OnResult.Broadcast(ECommonStatusCode::SIGN_IN_FAILED);
+	else if (StatusCode == 12501)
+		OnResult.Broadcast(ECommonStatusCode::SIGN_IN_CANCELLED);
+	else if (StatusCode == 12502)
+		OnResult.Broadcast(ECommonStatusCode::SIGN_IN_CURRENTLY_IN_PROGRESS);
 	else
-		OnFailure.Broadcast(Code);
+		OnResult.Broadcast(Code);
 }
 
 #if PLATFORM_ANDROID

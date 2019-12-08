@@ -12,7 +12,7 @@ void FUnrealFirebaseAuthenticationModule::ShutdownModule()
 
 FUnrealFirebaseAuthenticationModule* FUnrealFirebaseAuthenticationModule::GetModule()
 {
-	return FModuleManager::Get().LoadModulePtr<FUnrealFirebaseAuthenticationModule>("UnrealFirebaseAuthentication");
+	return FModuleManager::Get().GetModulePtr<FUnrealFirebaseAuthenticationModule>("UnrealFirebaseAuthentication");
 }
 
 #undef LOCTEXT_NAMESPACE
