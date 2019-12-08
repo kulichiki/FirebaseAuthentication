@@ -36,14 +36,3 @@ void UAnonymousSignIn::ResultCode(int StatusCode)
 	else
 		OnResult.Broadcast(Code);
 }
-
-#if PLATFORM_ANDROID
-JNI_METHOD void Java_com_epicgames_ue4_GameActivity_NativeAnonymouslySignInResult(JNIEnv* jenv, jobject thiz, jint StatusCode)
-{
-	if (FUnrealFirebaseAuthenticationModule* Module = FUnrealFirebaseAuthenticationModule::GetModule())
-	{
-		Module->ResultCode.Broadcast(StatusCode);
-		Module->ResultCode.Clear();
-	}
-}
-#endif

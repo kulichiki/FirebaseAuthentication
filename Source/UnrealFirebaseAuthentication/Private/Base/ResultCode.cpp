@@ -16,3 +16,14 @@ void UResultCode::Activate()
 	}
 #endif
 }
+
+#if PLATFORM_ANDROID
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_NativeResultCode(JNIEnv* jenv, jobject thiz, jint StatusCode)
+{
+	if (FUnrealFirebaseAuthenticationModule* Module = FUnrealFirebaseAuthenticationModule::GetModule())
+	{
+		Module->ResultCode.Broadcast(StatusCode);
+		Module->ResultCode.Clear();
+	}
+}
+#endif

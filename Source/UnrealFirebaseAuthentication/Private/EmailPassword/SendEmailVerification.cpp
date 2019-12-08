@@ -1,4 +1,4 @@
-#include "GoogleSignIn.h"
+#include "SendEmailVerification.h"
 #include "UnrealFirebaseAuthentication.h"
 
 #if PLATFORM_ANDROID
@@ -6,25 +6,25 @@
 	#include "Android/AndroidApplication.h"
 #endif
 
-UGoogleSignIn* UGoogleSignIn::GoogleSignIn()
+USendEmailVerification* USendEmailVerification::SendEmailVerification()
 {
-	return NewObject<UGoogleSignIn>();
+	return NewObject<USendEmailVerification>();
 }
 
-void UGoogleSignIn::Activate()
+void USendEmailVerification::Activate()
 {
 	Super::Activate();
-	
+
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_GoogleSignIn", "()V", false);
+		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_SendEmailVerification", "()V", false);
 		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID);
 	}
 #endif
 }
 
-void UGoogleSignIn::ResultCode(int StatusCode)
+void USendEmailVerification::ResultCode(int StatusCode)
 {
 	ECommonStatusCode Code = ECommonStatusCode(StatusCode);
 	if (StatusCode == 12500)

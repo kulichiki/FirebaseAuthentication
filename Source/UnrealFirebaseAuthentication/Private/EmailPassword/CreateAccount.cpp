@@ -1,4 +1,4 @@
-#include "AnonymouslyLinkAccount.h"
+#include "CreateAccount.h"
 #include "UnrealFirebaseAuthentication.h"
 
 #if PLATFORM_ANDROID
@@ -6,15 +6,15 @@
 	#include "Android/AndroidApplication.h"
 #endif
 
-UAnonymouslyLinkAccount* UAnonymouslyLinkAccount::AnonymouslyLinkAccount(FString Email, FString Password)
+UCreateAccount* UCreateAccount::CreateAccount(FString Email, FString Password)
 {
-	UAnonymouslyLinkAccount* BlueprintNode = NewObject<UAnonymouslyLinkAccount>();
+	UCreateAccount* BlueprintNode = NewObject<UCreateAccount>();
 	BlueprintNode->Email = Email;
 	BlueprintNode->Password = Password;
 	return BlueprintNode;
 }
 
-void UAnonymouslyLinkAccount::Activate()
+void UCreateAccount::Activate()
 {
 	Super::Activate();
 
@@ -23,8 +23,8 @@ void UAnonymouslyLinkAccount::Activate()
 	{
 		jstring JEmail = Env->NewStringUTF(TCHAR_TO_UTF8(*Email));
 		jstring JPassword = Env->NewStringUTF(TCHAR_TO_UTF8(*Password));
-		
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_AnonymouslyLinkAccount", "(Ljava/lang/String;Ljava/lang/String;)V", false);
+
+		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_CreateAccount", "(Ljava/lang/String;Ljava/lang/String;)V", false);
 		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JEmail, JPassword);
 
 		Env->DeleteLocalRef(JEmail);
@@ -33,7 +33,7 @@ void UAnonymouslyLinkAccount::Activate()
 #endif
 }
 
-void UAnonymouslyLinkAccount::ResultCode(int StatusCode)
+void UCreateAccount::ResultCode(int StatusCode)
 {
 	ECommonStatusCode Code = ECommonStatusCode(StatusCode);
 	if (StatusCode == 12500)

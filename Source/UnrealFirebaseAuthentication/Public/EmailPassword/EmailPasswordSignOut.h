@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Result.h"
-#include "GoogleRevokeAccess.generated.h"
+#include "EmailPasswordSignOut.generated.h"
 
 UCLASS()
-class UNREALFIREBASEAUTHENTICATION_API UGoogleRevokeAccess : public UResult
+class UNREALFIREBASEAUTHENTICATION_API UEmailPasswordSignOut : public UResult
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UGoogleRevokeAccess* GoogleRevokeAccess();
+	static UEmailPasswordSignOut* EmailPasswordSignOut();
 	void Activate() override;
 
 private:

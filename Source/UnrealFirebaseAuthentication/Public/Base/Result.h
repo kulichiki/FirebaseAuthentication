@@ -1,8 +1,9 @@
 #pragma once
 
-#include "CoreMinimal.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Result.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FResultDelegate);
 
 UCLASS()
 class UNREALFIREBASEAUTHENTICATION_API UResult : public UBlueprintAsyncActionBase
@@ -11,6 +12,9 @@ class UNREALFIREBASEAUTHENTICATION_API UResult : public UBlueprintAsyncActionBas
 	
 public:
 	void Activate() override;
+
+	UPROPERTY(BlueprintAssignable)
+	FResultDelegate OnResult;
 
 private:
 	virtual void Result() {};

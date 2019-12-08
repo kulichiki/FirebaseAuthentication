@@ -62,6 +62,7 @@
       import com.google.firebase.auth.AuthCredential;
       import com.google.firebase.auth.AuthResult;
       import com.google.firebase.auth.FirebaseAuth;
+      import com.google.firebase.auth.FirebaseUser;
       import com.google.firebase.auth.GoogleAuthProvider;
       import com.google.firebase.auth.EmailAuthProvider;
     </insert>
@@ -73,15 +74,17 @@
   
   <gameActivityClassAdditions>
     <insert>
+      private native void NativeResultCode(int StatusCode);
+      private native void NativeResult();
+
+
+
+
       private static final int GOOGLE_SIGNIN_RC = 9001;
-      
+
       private FirebaseAuth Auth;
       private GoogleSignInClient SignInClient;
-      
-      private native void NativeGoogleSignInResult(int StatusCode);
-      private native void NativeGoogleSignOutResult();
-      private native void NativeGoogleRevokeAccessResult();
-      
+
       private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
       {
           AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
@@ -93,13 +96,13 @@
                   if (Task.isSuccessful())
                   {
                       // Sign in success
-                      NativeGoogleSignInResult(CommonStatusCodes.SUCCESS);
+                      NativeResultCode(CommonStatusCodes.SUCCESS);
                   }
                   else 
                   {
                       // Sign in failed
                       // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
-                      NativeGoogleSignInResult(CommonStatusCodes.ERROR);
+                      NativeResultCode(CommonStatusCodes.ERROR);
                   }
               }
           });
@@ -121,7 +124,7 @@
               @Override
               public void onComplete(@NonNull Task&lt;Void&gt; Task)
               {
-                  NativeGoogleSignOutResult();
+                  NativeResult();
               }
           });
       }
@@ -136,11 +139,11 @@
           {
               @Override
               public void onComplete(@NonNull Task&lt;Void&gt; Task)
-      {
-      NativeGoogleRevokeAccessResult();
+              {
+                  NativeResult();
+              }
+          });
       }
-      });
-      }
 
 
 
@@ -149,13 +152,15 @@
 
 
 
-      private native void NativeAnonymouslyLinkAccountResult(int StatusCode);
-      private native void NativeAnonymouslySignInResult(int StatusCode);
-      private native void NativeAnonymouslySignOutResult();
+
+
+
+
+
 
       private void AndroidThunkJava_AnonymouslySignIn()
       {
-      Auth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          Auth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
           {
               @Override
               public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
@@ -163,13 +168,13 @@
                   if (Task.isSuccessful())
                   {
                       // Sign in success
-                      NativeAnonymouslySignInResult(CommonStatusCodes.SUCCESS);
+                      NativeResultCode(CommonStatusCodes.SUCCESS);
                   }
                   else 
                   {
                       // Sign in failed
                       // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
-                      NativeAnonymouslySignInResult(CommonStatusCodes.ERROR);
+                      NativeResultCode(CommonStatusCodes.ERROR);
                   }
               }
           });
@@ -178,7 +183,7 @@
       private void AndroidThunkJava_AnonymouslySignOut()
       {
           Auth.signOut();
-          NativeAnonymouslySignOutResult();
+          NativeResult();
       }
       
       private void AndroidThunkJava_AnonymouslyLinkAccount(String Email, String Password)
@@ -193,13 +198,101 @@
                   if (Task.isSuccessful())
                   {
                       // Sign in success
-                      NativeAnonymouslyLinkAccountResult(CommonStatusCodes.SUCCESS);
+                      NativeResultCode(CommonStatusCodes.SUCCESS);
                   }
                   else 
                   {
                       // Sign in failed
                       // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
-                      NativeAnonymouslyLinkAccountResult(CommonStatusCodes.ERROR);
+                      NativeResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      private void AndroidThunkJava_CreateAccount(String Email, String Password)
+      {
+          Auth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failure
+                      NativeResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+
+      private void AndroidThunkJava_EmailPasswordSignIn(String Email, String Password)
+      {
+          Auth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failure
+                      NativeResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+
+      private void AndroidThunkJava_EmailPasswordSignOut()
+      {
+          Auth.signOut();
+          NativeResult();
+      }
+
+      private void AndroidThunkJava_SendEmailVerification()
+      {
+          // Send verification email
+          final FirebaseUser User = Auth.getCurrentUser();
+          User.sendEmailVerification().addOnCompleteListener(this, new OnCompleteListener&lt;Void&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;Void&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failure
+                      NativeResultCode(CommonStatusCodes.ERROR);
                   }
               }
           });
@@ -246,7 +339,7 @@
           }
           catch (ApiException e)
           {
-              NativeGoogleSignInResult(e.getStatusCode());
+              NativeResultCode(e.getStatusCode());
           }
       }
     </insert>
