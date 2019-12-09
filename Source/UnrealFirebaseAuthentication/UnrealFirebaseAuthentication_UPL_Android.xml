@@ -85,6 +85,8 @@
       private FirebaseAuth Auth;
       private GoogleSignInClient SignInClient;
 
+
+      // ВОЗВРАЩАТЬ РЕЗУЛЬТАТ КОД
       private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
       {
           AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
@@ -158,6 +160,15 @@
 
 
 
+
+
+
+
+
+
+
+
+
       private void AndroidThunkJava_AnonymouslySignIn()
       {
           Auth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
@@ -178,12 +189,6 @@
                   }
               }
           });
-      }
-      
-      private void AndroidThunkJava_AnonymouslySignOut()
-      {
-          Auth.signOut();
-          NativeResult();
       }
       
       private void AndroidThunkJava_AnonymouslyLinkAccount(String Email, String Password)
@@ -209,6 +214,21 @@
               }
           });
       }
+
+      private void AndroidThunkJava_AnonymouslySignOut()
+      {
+          Auth.signOut();
+      }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -241,7 +261,7 @@
                   }
                   else 
                   {
-                      // Sign in failure
+                      // Sign in failed
                       NativeResultCode(CommonStatusCodes.ERROR);
                   }
               }
@@ -262,17 +282,11 @@
                   }
                   else 
                   {
-                      // Sign in failure
+                      // Sign in failed
                       NativeResultCode(CommonStatusCodes.ERROR);
                   }
               }
           });
-      }
-
-      private void AndroidThunkJava_EmailPasswordSignOut()
-      {
-          Auth.signOut();
-          NativeResult();
       }
 
       private void AndroidThunkJava_SendEmailVerification()
@@ -291,11 +305,117 @@
                   }
                   else 
                   {
-                      // Sign in failure
+                      // Sign in failed
                       NativeResultCode(CommonStatusCodes.ERROR);
                   }
               }
           });
+      }
+      
+      private void AndroidThunkJava_EmailPasswordSignOut()
+      {
+          Auth.signOut();
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      private static final int VERIFY_FAILED = 23;
+      private static final int INVALID_CODE = 24;
+      private static final int INVALID_PHONE_NUMBER = 25;
+      private static final int SMS_QUOTA = 26;
+      private static final int RESEND_TOKEN_NOT_VALID = 27;
+
+      private String VerificationID;
+      private PhoneAuthProvider.ForceResendingToken ResendToken;
+      private PhoneAuthProvider.OnVerificationStateChangedCallbacks AuthCallbacks;
+
+      private void AndroidThunkJava_StartPhoneNumberVerification(String PhoneNumber, int Timeout)
+      {
+          // Phone number to verify
+          // Timeout duration
+          // Unit of timeout
+          // Activity (for callback binding)
+          // OnVerificationStateChangedCallbacks
+          PhoneAuthProvider.getInstance().verifyPhoneNumber(PhoneNumber, Timeout, TimeUnit.SECONDS, this, AuthCallbacks);
+      }
+
+      private void AndroidThunkJava_VerifyPhoneNumberWithCode(String Code)
+      {
+          PhoneAuthCredential Credential = PhoneAuthProvider.getCredential(VerificationID, Code);
+          SignInWithPhoneAuthCredential(Credential);
+      }
+
+      private void AndroidThunkJava_ResendVerificationCode(String PhoneNumber, int Timeout)
+      {
+          if (ResendToken != null)
+          {
+              // Phone number to verify
+              // Timeout duration
+              // Unit of timeout
+              // Activity (for callback binding)
+              // OnVerificationStateChangedCallbacks
+              // ForceResendingToken from callbacks
+              PhoneAuthProvider.getInstance().verifyPhoneNumber(PhoneNumber, Timeout, TimeUnit.SECONDS, this, AuthCallbacks, ResendToken);
+          }
+          else
+          {
+              NativeResultCode(RESEND_TOKEN_NOT_VALID);
+          }
+      }
+
+      private void SignInWithPhoneAuthCredential(PhoneAuthCredential Credential)
+      {
+          Auth.signInWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failed
+                      if (Task.getException() instanceof FirebaseAuthInvalidCredentialsException)
+                      {
+                          // The verification code entered was invalid
+                          NativeResultCode(INVALID_CODE);
+                      }
+                      else
+                      {
+                          NativeResultCode(CommonStatusCodes.ERROR);
+                      }
+                  }
+              }
+          });
+      }
+
+      private void AndroidThunkJava_PhoneSignOut()
+      {
+          Auth.signOut();
       }
       
     </insert>
@@ -308,15 +428,74 @@
   
   
   
+
+
+
+
+
+
+
+
+
   
   <gameActivityOnCreateAdditions>
     <insert>
+      Auth = FirebaseAuth.getInstance();
+
       GoogleSignInOptions SignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                                           .requestIdToken(getString(R.string.default_web_client_id))
                                           .requestEmail()
                                           .build();
       SignInClient = GoogleSignIn.getClient(this, SignInOptions);
-      Auth = FirebaseAuth.getInstance();
+
+
+      // Initialize phone auth callbacks
+      AuthCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
+      {
+          @Override
+          public void onVerificationCompleted(PhoneAuthCredential Credential)
+          {
+              // This callback will be invoked in two situations:
+              // 1 - Instant verification. In some cases the phone number can be instantly
+              //     verified without needing to send or enter a verification code.
+              // 2 - Auto-retrieval. On some devices Google Play services can automatically
+              //     detect the incoming verification SMS and perform verification without
+              //     user action.
+              SignInWithPhoneAuthCredential(Credential);
+              NativeResultCode(CommonStatusCodes.SUCCESS);
+          }
+      
+          @Override
+          public void onVerificationFailed(FirebaseException e)
+          {
+              // This callback is invoked in an invalid request for verification is made,
+              // for instance if the the phone number format is not valid.
+              if (e instanceof FirebaseAuthInvalidCredentialsException)
+              {
+                  // Invalid phone number
+                  NativeResultCode(INVALID_PHONE_NUMBER);
+              }
+              else if (e instanceof FirebaseTooManyRequestsException)
+              {
+                  // The SMS quota for the project has been exceeded
+                  NativeResultCode(SMS_QUOTA);
+              }
+          }
+      
+          @Override
+          public void onCodeSent(@NonNull String AuthVerificationID,
+                                 @NonNull PhoneAuthProvider.ForceResendingToken Token)
+          {
+              // The SMS verification code has been sent to the provided phone number, we
+              // now need to ask the user to enter the code and then construct a credential
+              // by combining the code with a verification ID.
+      
+              // Save verification ID and resending token so we can use them later
+              VerificationID = AuthVerificationID;
+              ResendToken = Token;
+              NativeResultCode(CommonStatusCodes.SUCCESS);
+          }
+      };
     </insert>
   </gameActivityOnCreateAdditions>
 

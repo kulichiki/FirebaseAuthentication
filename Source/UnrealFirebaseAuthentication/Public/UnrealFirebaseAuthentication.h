@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Engine.h"
-#include "CoreMinimal.h"
-#include "Modules/ModuleManager.h"
 
 UENUM(BlueprintType)
 enum class ECommonStatusCode : uint8
@@ -25,7 +23,14 @@ enum class ECommonStatusCode : uint8
 	// Additional
 	SIGN_IN_CANCELLED				= 20	UMETA(DisplayName = "Sign In Cancelled"),
 	SIGN_IN_CURRENTLY_IN_PROGRESS	= 21	UMETA(DisplayName = "Sign In Currently In Progress"),
-	SIGN_IN_FAILED					= 22	UMETA(DisplayName = "Sign In Failed")
+	SIGN_IN_FAILED					= 22	UMETA(DisplayName = "Sign In Failed"),
+
+	// Phone
+	VERIFY_FAILED					= 23	UMETA(DisplayName = "Verify Failed"),
+	INVALID_CODE					= 24	UMETA(DisplayName = "Invalid Code"),
+	INVALID_PHONE_NUMBER			= 25	UMETA(DisplayName = "Invalid Phone Number"),
+	SMS_QUOTA						= 26	UMETA(DisplayName = "Invalid Phone Number"),
+	RESEND_TOKEN_NOT_VALID			= 27	UMETA(DisplayName = "Resend Token Not Valid")
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FResultCode, int);
