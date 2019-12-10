@@ -14,7 +14,7 @@ enum class EProviderCode : uint8
 };
 
 UCLASS()
-class ANALYTICSPROJECT_API UOAuthSignIn : public UResultCode
+class UNREALFIREBASEAUTHENTICATION_API UOAuthSignIn : public UResultCode
 {
 	GENERATED_BODY()
 

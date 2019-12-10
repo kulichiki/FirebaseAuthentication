@@ -20,11 +20,16 @@
   </androidManifestUpdates>
   
 	<AARImports>
-    <insertValue value="com.google.firebase,firebase-core,11.8.0" />
+    <insertValue value="com.google.firebase,firebase-core,16.0.9" />
     <insertNewline/>
 
-    <insertValue value="com.google.firebase,firebase-auth,11.8.0" />
+    <insertValue value="com.google.firebase,firebase-auth,16.2.1" />
     <insertNewline/>
+
+    <replace find="play-services-auth,11.8.0"   with="play-services-auth,16.0.0"/>
+    <replace find="play-services-games,11.8.0"  with="play-services-games,16.0.0"/>
+    <replace find="play-services-nearby,11.8.0" with="play-services-nearby,16.0.0"/>
+    <replace find="play-services-plus,11.8.0"   with="play-services-plus,16.0.0"/>
   </AARImports>
 
   <buildGradleAdditions>
@@ -442,24 +447,25 @@
 
       private void AndroidThunkJava_OAuthSignIn(String ProviderID)
       {
-          Auth.startActivityForSignInWithProvider(this, OAuthProvider.newBuilder(ProviderID, Auth).build()).addOnSuccessListener(new OnSuccessListener&lt;AuthResult&gt;()
-          {
-              @Override
-              public void onSuccess(AuthResult Result)
+          Auth.startActivityForSignInWithProvider(this, OAuthProvider.newBuilder(ProviderID, Auth).build())
+              .addOnSuccessListener(new OnSuccessListener&lt;AuthResult&gt;()
               {
-                  // Sign in success
-                  NativeResultCode(CommonStatusCodes.SUCCESS);
-              }
-          })
-          .addOnFailureListener(new OnFailureListener()
-          {
-              @Override
-              public void onFailure(@NonNull Exception e)
+                  @Override
+                  public void onSuccess(AuthResult Result)
+                  {
+                      // Sign in success
+                      NativeResultCode(CommonStatusCodes.SUCCESS);
+                  }
+              })
+              .addOnFailureListener(new OnFailureListener()
               {
-                  // Sign in failed
-                  NativeResultCode(CommonStatusCodes.ERROR);
-              }
-          });
+                  @Override
+                  public void onFailure(@NonNull Exception e)
+                  {
+                      // Sign in failed
+                      NativeResultCode(CommonStatusCodes.ERROR);
+                  }
+              });
       }
 
 
