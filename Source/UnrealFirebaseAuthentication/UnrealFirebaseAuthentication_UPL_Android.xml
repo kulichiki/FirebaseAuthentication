@@ -54,10 +54,16 @@
       import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
       import com.google.android.gms.auth.api.signin.GoogleSignInClient;
       import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+      import com.google.android.gms.tasks.OnFailureListener;
+      import com.google.android.gms.tasks.OnSuccessListener;
       import com.google.android.gms.tasks.OnCompleteListener;
       import com.google.android.gms.tasks.Task;
       import com.google.android.gms.common.api.ApiException;
       import com.google.android.gms.common.api.CommonStatusCodes;
+
+      import com.google.firebase.FirebaseException;
+      import com.google.firebase.FirebaseTooManyRequestsException;
+      import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 
       import com.google.firebase.auth.AuthCredential;
       import com.google.firebase.auth.AuthResult;
@@ -65,6 +71,11 @@
       import com.google.firebase.auth.FirebaseUser;
       import com.google.firebase.auth.GoogleAuthProvider;
       import com.google.firebase.auth.EmailAuthProvider;
+      import com.google.firebase.auth.OAuthProvider;
+      import com.google.firebase.auth.PhoneAuthProvider;
+      import com.google.firebase.auth.PhoneAuthCredential;
+
+      import java.util.concurrent.TimeUnit;
     </insert>
   </gameActivityImportAdditions>
 
@@ -76,6 +87,12 @@
     <insert>
       private native void NativeResultCode(int StatusCode);
       private native void NativeResult();
+
+      
+      private void AndroidThunkJava_FirebaseAccountSignOut()
+      {
+          Auth.signOut();
+      }
 
 
 
@@ -215,11 +232,6 @@
           });
       }
 
-      private void AndroidThunkJava_AnonymouslySignOut()
-      {
-          Auth.signOut();
-      }
-
 
 
 
@@ -310,11 +322,6 @@
                   }
               }
           });
-      }
-      
-      private void AndroidThunkJava_EmailPasswordSignOut()
-      {
-          Auth.signOut();
       }
 
 
@@ -412,12 +419,50 @@
               }
           });
       }
-
-      private void AndroidThunkJava_PhoneSignOut()
-      {
-          Auth.signOut();
-      }
       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      private void AndroidThunkJava_OAuthSignIn(String ProviderID)
+      {
+          Auth.startActivityForSignInWithProvider(this, OAuthProvider.newBuilder(ProviderID, Auth).build()).addOnSuccessListener(new OnSuccessListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onSuccess(AuthResult Result)
+              {
+                  // Sign in success
+                  NativeResultCode(CommonStatusCodes.SUCCESS);
+              }
+          })
+          .addOnFailureListener(new OnFailureListener()
+          {
+              @Override
+              public void onFailure(@NonNull Exception e)
+              {
+                  // Sign in failed
+                  NativeResultCode(CommonStatusCodes.ERROR);
+              }
+          });
+      }
+
+
     </insert>
   </gameActivityClassAdditions>
 

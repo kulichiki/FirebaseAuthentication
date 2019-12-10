@@ -23,7 +23,7 @@ void UVerifyPhoneNumberWithCode::Activate()
 		jstring JCode = Env->NewStringUTF(TCHAR_TO_UTF8(*Code));
 
 		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_VerifyPhoneNumberWithCode", "(Ljava/lang/String;)V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JCode);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JCode);
 
 		Env->DeleteLocalRef(JCode);
 	}
