@@ -23,7 +23,7 @@ void UStartPhoneNumberVerification::Activate()
 	{
 		jstring JPhoneNumber = Env->NewStringUTF(TCHAR_TO_UTF8(*PhoneNumber));
 
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_ResendVerificationCode", "(Ljava/lang/String;I)V", false);
+		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_StartPhoneNumberVerification", "(Ljava/lang/String;I)V", false);
 		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JPhoneNumber, Timeout);
 
 		Env->DeleteLocalRef(JPhoneNumber);
