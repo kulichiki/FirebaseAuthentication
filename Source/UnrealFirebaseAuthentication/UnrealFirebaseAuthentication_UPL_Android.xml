@@ -374,8 +374,11 @@
 
       private void AndroidThunkJava_VerifyPhoneNumberWithCode(String Code)
       {
-          PhoneAuthCredential Credential = PhoneAuthProvider.getCredential(VerificationID, Code);
-          SignInWithPhoneAuthCredential(Credential);
+          if (VerificationID != null)
+          {
+              PhoneAuthCredential Credential = PhoneAuthProvider.getCredential(VerificationID, Code);
+              SignInWithPhoneAuthCredential(Credential);
+          }
       }
 
       private void AndroidThunkJava_ResendVerificationCode(String PhoneNumber, int Timeout)
