@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android" 
+      xmlns:tools="http://schemas.android.com/tools">
+
+  <init>
+    <setStringFromProperty result="PackageName" 
+                           ini="Engine" 
+                           section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" 
+                           property="PackageName" 
+                           default=""/>
+  </init>
+
+  <prebuildCopies>
+    <copyFile src="$S(PluginDir)/../../../../Build/Android/google-services.json" 
+              dst="$S(BuildDir)/gradle/app/google-services.json"/>
+  </prebuildCopies>
+  
+  <androidManifestUpdates>
+    <addPermission android:name="android.permission.INTERNET" />
+  </androidManifestUpdates>
+  
+	<AARImports>
+    <insertValue value="com.google.firebase,firebase-core,16.0.9" />
+    <insertNewline/>
+
+    <insertValue value="com.google.firebase,firebase-auth,16.2.1" />
+    <insertNewline/>
+
+    <replace find="play-services-auth,11.8.0"   with="play-services-auth,16.0.0"/>
+    <replace find="play-services-games,11.8.0"  with="play-services-games,16.0.0"/>
+    <replace find="play-services-nearby,11.8.0" with="play-services-nearby,16.0.0"/>
+    <replace find="play-services-plus,11.8.0"   with="play-services-plus,16.0.0"/>
+  </AARImports>
+
+  <buildGradleAdditions>
+    <insertValue value="apply plugin: 'com.google.gms.google-services'"/>
+    <insertNewline/>
+  </buildGradleAdditions>
+
+  <buildscriptGradleAdditions>
+    <insert>
+      dependencies
+      {
+        classpath 'com.google.gms:google-services:4.0.0'
+      }
+    </insert>
+  </buildscriptGradleAdditions>
+  
+  
+
+  <gameActivityImportAdditions>
+    <insertValue value="import $S(PackageName).R;" />
+    <insertNewline/>
+
+    <insert>
+      import android.support.annotation.NonNull;
+
+      import com.google.android.gms.auth.api.signin.GoogleSignIn;
+      import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+      import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+      import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+      import com.google.android.gms.tasks.OnFailureListener;
+      import com.google.android.gms.tasks.OnSuccessListener;
+      import com.google.android.gms.tasks.OnCompleteListener;
+      import com.google.android.gms.tasks.Task;
+      import com.google.android.gms.common.api.ApiException;
+      import com.google.android.gms.common.api.CommonStatusCodes;
+
+      import com.google.firebase.FirebaseException;
+      import com.google.firebase.FirebaseTooManyRequestsException;
+      import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+
+      import com.google.firebase.auth.AuthCredential;
+      import com.google.firebase.auth.AuthResult;
+      import com.google.firebase.auth.FirebaseAuth;
+      import com.google.firebase.auth.FirebaseUser;
+      import com.google.firebase.auth.GoogleAuthProvider;
+      import com.google.firebase.auth.EmailAuthProvider;
+      import com.google.firebase.auth.OAuthProvider;
+      import com.google.firebase.auth.PhoneAuthProvider;
+      import com.google.firebase.auth.PhoneAuthCredential;
+
+      import java.util.concurrent.TimeUnit;
+    </insert>
+  </gameActivityImportAdditions>
+
+  
+  
+  
+  
+  <gameActivityClassAdditions>
+    <insert>
+      private native void NativeFirebaseResultCode(int StatusCode);
+      private native void NativeFirebaseResult();
+
+      
+      private void AndroidThunkJava_FirebaseAccountSignOut()
+      {
+          Auth.signOut();
+      }
+
+
+
+
+      private static final int GOOGLE_SIGNIN_RC = 9001;
+
+      private FirebaseAuth Auth;
+      private GoogleSignInClient SignInClient;
+
+
+      // ВОЗВРАЩАТЬ РЕЗУЛЬТАТ КОД
+      private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
+      {
+          AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
+          Auth.signInWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failed
+                      // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
+                      NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+      
+      private void AndroidThunkJava_GoogleSignIn()
+      {
+          Intent SignInIntent = SignInClient.getSignInIntent();
+          startActivityForResult(SignInIntent, GOOGLE_SIGNIN_RC);
+      }
+
+      private void AndroidThunkJava_GoogleSignOut()
+      {
+          Auth.signOut();
+
+          // Google sign out
+          SignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener&lt;Void&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;Void&gt; Task)
+              {
+                  NativeFirebaseResult();
+              }
+          });
+      }
+
+      private void AndroidThunkJava_GoogleRevokeAccess()
+      {
+          // Firebase sign out
+          Auth.signOut();
+
+          // Google revoke access
+          SignInClient.revokeAccess().addOnCompleteListener(this, new OnCompleteListener&lt;Void&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;Void&gt; Task)
+              {
+                  NativeFirebaseResult();
+              }
+          });
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      private void AndroidThunkJava_AnonymouslySignIn()
+      {
+          Auth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failed
+                      // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
+                      NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+      
+      private void AndroidThunkJava_AnonymouslyLinkAccount(String Email, String Password)
+      {
+          // Create EmailAuthCredential with email and password
+          AuthCredential Credential = EmailAuthProvider.getCredential(Email, Password);
+          Auth.getCurrentUser().linkWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failed
+                      // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
+                      NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      private void AndroidThunkJava_CreateAccount(String Email, String Password)
+      {
+          Auth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failed
+                      NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+
+      private void AndroidThunkJava_EmailPasswordSignIn(String Email, String Password)
+      {
+          Auth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failed
+                      NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+
+      private void AndroidThunkJava_SendEmailVerification()
+      {
+          // Send verification email
+          final FirebaseUser User = Auth.getCurrentUser();
+          User.sendEmailVerification().addOnCompleteListener(this, new OnCompleteListener&lt;Void&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;Void&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failed
+                      NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      private static final int VERIFY_FAILED = 23;
+      private static final int INVALID_CODE = 24;
+      private static final int INVALID_PHONE_NUMBER = 25;
+      private static final int SMS_QUOTA = 26;
+      private static final int RESEND_TOKEN_NOT_VALID = 27;
+
+      private String VerificationID;
+      private PhoneAuthProvider.ForceResendingToken ResendToken;
+      private PhoneAuthProvider.OnVerificationStateChangedCallbacks AuthCallbacks;
+
+      private void AndroidThunkJava_StartPhoneNumberVerification(String PhoneNumber, int Timeout)
+      {
+          // Phone number to verify
+          // Timeout duration
+          // Unit of timeout
+          // Activity (for callback binding)
+          // OnVerificationStateChangedCallbacks
+          PhoneAuthProvider.getInstance().verifyPhoneNumber(PhoneNumber, Timeout, TimeUnit.SECONDS, this, AuthCallbacks);
+      }
+
+      private void AndroidThunkJava_VerifyPhoneNumberWithCode(String Code)
+      {
+          if (VerificationID != null)
+          {
+              PhoneAuthCredential Credential = PhoneAuthProvider.getCredential(VerificationID, Code);
+              SignInWithPhoneAuthCredential(Credential);
+          }
+      }
+
+      private void AndroidThunkJava_ResendVerificationCode(String PhoneNumber, int Timeout)
+      {
+          if (ResendToken != null)
+          {
+              // Phone number to verify
+              // Timeout duration
+              // Unit of timeout
+              // Activity (for callback binding)
+              // OnVerificationStateChangedCallbacks
+              // ForceResendingToken from callbacks
+              PhoneAuthProvider.getInstance().verifyPhoneNumber(PhoneNumber, Timeout, TimeUnit.SECONDS, this, AuthCallbacks, ResendToken);
+          }
+          else
+          {
+              NativeFirebaseResultCode(RESEND_TOKEN_NOT_VALID);
+          }
+      }
+
+      private void SignInWithPhoneAuthCredential(PhoneAuthCredential Credential)
+      {
+          Auth.signInWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failed
+                      if (Task.getException() instanceof FirebaseAuthInvalidCredentialsException)
+                      {
+                          // The verification code entered was invalid
+                          NativeFirebaseResultCode(INVALID_CODE);
+                      }
+                      else
+                      {
+                          NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                      }
+                  }
+              }
+          });
+      }
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      private void AndroidThunkJava_OAuthSignIn(String ProviderID)
+      {
+          Auth.startActivityForSignInWithProvider(this, OAuthProvider.newBuilder(ProviderID, Auth).build())
+              .addOnSuccessListener(new OnSuccessListener&lt;AuthResult&gt;()
+              {
+                  @Override
+                  public void onSuccess(AuthResult Result)
+                  {
+                      // Sign in success
+                      NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                  }
+              })
+              .addOnFailureListener(new OnFailureListener()
+              {
+                  @Override
+                  public void onFailure(@NonNull Exception e)
+                  {
+                      // Sign in failed
+                      NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                  }
+              });
+      }
+
+
+    </insert>
+  </gameActivityClassAdditions>
+
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <gameActivityOnCreateAdditions>
+    <insert>
+      Auth = FirebaseAuth.getInstance();
+
+      GoogleSignInOptions SignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                          .requestIdToken(getString(R.string.default_web_client_id))
+                                          .requestEmail()
+                                          .build();
+      SignInClient = GoogleSignIn.getClient(this, SignInOptions);
+
+
+      // Initialize phone auth callbacks
+      AuthCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
+      {
+          @Override
+          public void onVerificationCompleted(PhoneAuthCredential Credential)
+          {
+              // This callback will be invoked in two situations:
+              // 1 - Instant verification. In some cases the phone number can be instantly
+              //     verified without needing to send or enter a verification code.
+              // 2 - Auto-retrieval. On some devices Google Play services can automatically
+              //     detect the incoming verification SMS and perform verification without
+              //     user action.
+              SignInWithPhoneAuthCredential(Credential);
+              NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+          }
+      
+          @Override
+          public void onVerificationFailed(FirebaseException e)
+          {
+              // This callback is invoked in an invalid request for verification is made,
+              // for instance if the the phone number format is not valid.
+              if (e instanceof FirebaseAuthInvalidCredentialsException)
+              {
+                  // Invalid phone number
+                  NativeFirebaseResultCode(INVALID_PHONE_NUMBER);
+              }
+              else if (e instanceof FirebaseTooManyRequestsException)
+              {
+                  // The SMS quota for the project has been exceeded
+                  NativeFirebaseResultCode(SMS_QUOTA);
+              }
+          }
+      
+          @Override
+          public void onCodeSent(@NonNull String AuthVerificationID,
+                                 @NonNull PhoneAuthProvider.ForceResendingToken Token)
+          {
+              // The SMS verification code has been sent to the provided phone number, we
+              // now need to ask the user to enter the code and then construct a credential
+              // by combining the code with a verification ID.
+      
+              // Save verification ID and resending token so we can use them later
+              VerificationID = AuthVerificationID;
+              ResendToken = Token;
+              NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+          }
+      };
+    </insert>
+  </gameActivityOnCreateAdditions>
+
+  
+  
+  
+  
+  
+  
+  
+  <gameActivityOnActivityResultAdditions>
+    <insert>
+      if (requestCode == GOOGLE_SIGNIN_RC)
+      {
+          Task&lt;GoogleSignInAccount&gt; Task = GoogleSignIn.getSignedInAccountFromIntent(data);
+          try
+          {
+              GoogleSignInAccount SignInAccount = Task.getResult(ApiException.class);
+              FirebaseAuthWithGoogle(SignInAccount);
+          }
+          catch (ApiException e)
+          {
+              NativeFirebaseResultCode(e.getStatusCode());
+          }
+      }
+    </insert>
+  </gameActivityOnActivityResultAdditions>
+
+</root>
