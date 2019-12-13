@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "UnrealFirebaseAuthentication.h"
 #include "FirebaseAuthenticationLibrary.generated.h"
@@ -10,8 +9,7 @@ class UNREALFIREBASEAUTHENTICATION_API UFirebaseAuthenticationLibrary : public U
 {
 	GENERATED_BODY()
 
-public:
-
+public:	
 	UFUNCTION(BlueprintCallable)
 	static void AnonymousSignOut();
 
@@ -20,4 +18,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static void PhoneSignOut();
+
+	UFUNCTION(BlueprintCallable)
+	static void OAuthSignOut();
+
+private:
+	static void FirebaseSignOut();
 };

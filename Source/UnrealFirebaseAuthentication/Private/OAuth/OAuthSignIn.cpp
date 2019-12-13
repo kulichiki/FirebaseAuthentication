@@ -6,10 +6,10 @@
 	#include "Android/AndroidApplication.h"
 #endif
 
-UOAuthSignIn* UOAuthSignIn::OAuthSignIn(EProviderCode ProviderCode)
+UOAuthSignIn* UOAuthSignIn::OAuthSignIn(EOAuthProvider OAuthProvider)
 {
 	UOAuthSignIn* BlueprintNode = NewObject<UOAuthSignIn>();
-	BlueprintNode->ProviderCode = ProviderCode;
+	BlueprintNode->OAuthProvider = OAuthProvider;
 	return BlueprintNode;
 }
 
@@ -17,11 +17,28 @@ void UOAuthSignIn::Activate()
 {
 	Super::Activate();
 
-#if PLATFORM_ANDROID
+#if PLATFORM_ANDROID	
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_GoogleSignIn", "()V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID);
+		jstring JProviderURL;
+		switch (OAuthProvider)
+		{
+		case EOAuthProvider::Apple:
+			JProviderURL = Env->NewStringUTF("apple.com");
+		case EOAuthProvider::Github:
+			JProviderURL = Env->NewStringUTF("github.com");
+		case EOAuthProvider::Microsoft:
+			JProviderURL = Env->NewStringUTF("microsoft.com");
+		case EOAuthProvider::Yahoo:
+			JProviderURL = Env->NewStringUTF("yahoo.com");
+		case EOAuthProvider::Twitter:
+			JProviderURL = Env->NewStringUTF("twitter.com");
+		}
+		
+		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_OAuthSignIn", "(Ljava/lang/String;)V", false);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JProviderURL);
+
+		Env->DeleteLocalRef(JProviderURL);
 	}
 #endif
 }

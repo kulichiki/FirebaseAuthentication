@@ -4,13 +4,13 @@
 #include "OAuthSignIn.generated.h"
 
 UENUM(BlueprintType)
-enum class EProviderCode : uint8
+enum class EOAuthProvider : uint8
 {
-	apple		= 0		UMETA(DisplayName = "Apple"),
-	github		= 1		UMETA(DisplayName = "Github"),
-	microsoft	= 2		UMETA(DisplayName = "Microsoft"),
-	yahoo		= 3		UMETA(DisplayName = "Yahoo"),
-	twitter		= 4		UMETA(DisplayName = "Twitter"),
+	Apple,
+	Github,
+	Microsoft,
+	Yahoo,
+	Twitter	
 };
 
 UCLASS()
@@ -20,10 +20,10 @@ class UNREALFIREBASEAUTHENTICATION_API UOAuthSignIn : public UResultCode
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UOAuthSignIn* OAuthSignIn(EProviderCode ProviderCode);
+	static UOAuthSignIn* OAuthSignIn(EOAuthProvider OAuthProvider);
 	void Activate() override;
 
 private:
 	void ResultCode(int StatusCode) override;
-	EProviderCode ProviderCode;
+	EOAuthProvider OAuthProvider;
 };
