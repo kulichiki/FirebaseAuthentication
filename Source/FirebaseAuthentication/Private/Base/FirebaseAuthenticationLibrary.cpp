@@ -25,6 +25,17 @@ void UFirebaseAuthenticationLibrary::OAuthSignOut()
 	FirebaseSignOut();
 }
 
+void UFirebaseAuthenticationLibrary::FacebookSignOut()
+{
+#if PLATFORM_ANDROID
+	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
+	{
+		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_FacebookSignOut", "()V", false);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID);
+	}
+#endif
+}
+
 void UFirebaseAuthenticationLibrary::FirebaseSignOut()
 {
 #if PLATFORM_ANDROID

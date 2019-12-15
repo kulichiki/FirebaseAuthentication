@@ -3,19 +3,34 @@
       xmlns:tools="http://schemas.android.com/tools">
 
   <init>
-    <setStringFromProperty result="PackageName" 
-                           ini="Engine" 
-                           section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" 
-                           property="PackageName" 
-                           default=""/>
+    <setStringFromProperty 
+      result="PackageName"
+      ini="Engine"
+      section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" 
+      property="PackageName" 
+      default=""/>
   </init>
 
   <prebuildCopies>
-    <copyFile src="$S(PluginDir)/../../../../Build/Android/google-services.json" 
-              dst="$S(BuildDir)/gradle/app/google-services.json"/>
+    <copyFile 
+      src="$S(PluginDir)/../../../../Build/Android/google-services.json" 
+      dst="$S(BuildDir)/gradle/app/google-services.json"/>
   </prebuildCopies>
   
   <androidManifestUpdates>
+    <addElements tag="application">
+      <meta-data
+        android:name="com.facebook.sdk.ApplicationId"
+        android:value="@string/facebook_app_id"
+        tools:replace="android:value" />
+
+      <activity
+        android:name="com.facebook.FacebookActivity"
+        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar"
+        tools:replace="android:theme" />
+    </addElements>
     <addPermission android:name="android.permission.INTERNET" />
   </androidManifestUpdates>
   
@@ -24,6 +39,9 @@
     <insertNewline/>
 
     <insertValue value="com.google.firebase,firebase-auth,16.2.1" />
+    <insertNewline/>
+
+    <insertValue value="com.facebook.android,facebook-login,4.42.0" />
     <insertNewline/>
 
     <replace find="play-services-auth,11.8.0"   with="play-services-auth,16.0.0"/>
@@ -41,7 +59,7 @@
     <insert>
       dependencies
       {
-        classpath 'com.google.gms:google-services:4.0.0'
+          classpath 'com.google.gms:google-services:4.0.0'
       }
     </insert>
   </buildscriptGradleAdditions>
@@ -69,6 +87,7 @@
       import com.google.firebase.FirebaseException;
       import com.google.firebase.FirebaseTooManyRequestsException;
       import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+      import com.facebook.FacebookException;
 
       import com.google.firebase.auth.AuthCredential;
       import com.google.firebase.auth.AuthResult;
@@ -79,6 +98,13 @@
       import com.google.firebase.auth.OAuthProvider;
       import com.google.firebase.auth.PhoneAuthProvider;
       import com.google.firebase.auth.PhoneAuthCredential;
+      import com.google.firebase.auth.FacebookAuthProvider;
+
+      import com.facebook.AccessToken;
+      import com.facebook.CallbackManager;
+      import com.facebook.FacebookCallback;
+      import com.facebook.login.LoginManager;
+      import com.facebook.login.LoginResult;
 
       import java.util.concurrent.TimeUnit;
     </insert>
@@ -472,6 +498,60 @@
       }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+      private static final int FACEBOOK_SIGNIN_RC = 64206;
+
+      private CallbackManager FacebookCallbackManager;
+      private FacebookCallback&lt;LoginResult&gt; LoginCallback;
+
+      private void AndroidThunkJava_FacebookSignIn()
+      {
+          String[] ScopeFields = { "email", "public_profile" };
+          LoginManager Manager = LoginManager.getInstance();
+          Manager.registerCallback(FacebookCallbackManager, LoginCallback);
+          Manager.logInWithReadPermissions(this, Arrays.asList(ScopeFields));
+      }
+
+      public void AndroidThunkJava_FacebookSignOut()
+      {
+          Auth.signOut();
+          LoginManager.getInstance().logOut();
+      }
+
+      private void HandleFacebookAccessToken(AccessToken Token)
+      {
+          AuthCredential Credential = FacebookAuthProvider.getCredential(Token.getToken());
+          Auth.signInWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener&lt;AuthResult&gt;()
+          {
+              @Override
+              public void onComplete(@NonNull Task&lt;AuthResult&gt; Task)
+              {
+                  if (Task.isSuccessful())
+                  {
+                      // Sign in success
+                      NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                  }
+                  else 
+                  {
+                      // Sign in failed
+                      NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                  }
+              }
+          });
+      }
+
+
     </insert>
   </gameActivityClassAdditions>
 
@@ -550,6 +630,31 @@
               NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
           }
       };
+
+      // Initialize facebook callbacks
+      FacebookCallbackManager = CallbackManager.Factory.create();
+      LoginCallback = new FacebookCallback&lt;LoginResult&gt;()
+      {
+          @Override
+          public void onSuccess(LoginResult Result)
+          {
+              HandleFacebookAccessToken(Result.getAccessToken());
+          }
+      
+          @Override
+          public void onCancel()
+          {
+              // Sign In Failed
+              NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+          }
+      
+          @Override
+          public void onError(FacebookException error)
+          {
+              // Sign In Failed
+              NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+          }
+      };
     </insert>
   </gameActivityOnCreateAdditions>
 
@@ -574,6 +679,11 @@
           {
               NativeFirebaseResultCode(e.getStatusCode());
           }
+      }
+
+      if (requestCode == FACEBOOK_SIGNIN_RC)
+      {
+          FacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
       }
     </insert>
   </gameActivityOnActivityResultAdditions>

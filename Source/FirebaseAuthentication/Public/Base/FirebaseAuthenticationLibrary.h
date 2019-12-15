@@ -22,6 +22,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void OAuthSignOut();
 
+	UFUNCTION(BlueprintCallable)
+	static void FacebookSignOut();
+
 private:
 	static void FirebaseSignOut();
 };
