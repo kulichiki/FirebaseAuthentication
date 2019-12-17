@@ -9,7 +9,6 @@ class FIREBASEAUTHENTICATION_API UStartPhoneNumberVerification : public UFirebas
 	GENERATED_BODY()
 
 public:
-public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
 	static UStartPhoneNumberVerification* StartPhoneNumberVerification(FString PhoneNumber, int Timeout);
 	void Activate() override;
