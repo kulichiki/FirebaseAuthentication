@@ -8,7 +8,14 @@
       ini="Engine"
       section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" 
       property="PackageName" 
-      default=""/>
+      default="" />
+
+    <setStringFromProperty 
+      result="FacebookAppID" 
+      ini="Engine" 
+      section="/Script/FirebaseAuthenticationEditor.FirebaseSettings" 
+      property="FacebookAppID" 
+      default="" />
   </init>
 
   <prebuildCopies>
@@ -21,7 +28,7 @@
     <addElements tag="application">
       <meta-data
         android:name="com.facebook.sdk.ApplicationId"
-        android:value="@string/facebook_app_id"
+        android:value="$S(FacebookAppID)"
         tools:replace="android:value" />
 
       <activity
@@ -51,6 +58,19 @@
   </AARImports>
 
   <buildGradleAdditions>
+    <insert>
+      android 
+      {
+          buildTypes 
+          {
+              debug 
+              {
+      			      signingConfig signingConfigs.release
+      		    }
+          }
+      }
+    </insert>
+
     <insertValue value="apply plugin: 'com.google.gms.google-services'"/>
     <insertNewline/>
   </buildGradleAdditions>
