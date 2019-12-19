@@ -28,7 +28,7 @@
     <addElements tag="application">
       <meta-data
         android:name="com.facebook.sdk.ApplicationId"
-        android:value="$S(FacebookAppID)"
+        android:value="@string/FacebookAppID"
         tools:replace="android:value" />
 
       <activity
@@ -57,22 +57,26 @@
     <replace find="play-services-plus,11.8.0"   with="play-services-plus,16.0.0"/>
   </AARImports>
 
+  <gradleProperties>
+    <insertValue value="FACEBOOK_APP_ID=$S(FacebookAppID)" />
+    <insertNewline/>
+  </gradleProperties>
+
   <buildGradleAdditions>
     <insert>
       android 
       {
           buildTypes 
           {
-              debug 
-              {
-      			      signingConfig signingConfigs.release
-      		    }
+			        buildTypes.each
+				      {
+				          it.signingConfig signingConfigs.release
+                  it.resValue "string", "FacebookAppID", FACEBOOK_APP_ID
+			        }
           }
       }
+      apply plugin: 'com.google.gms.google-services'
     </insert>
-
-    <insertValue value="apply plugin: 'com.google.gms.google-services'"/>
-    <insertNewline/>
   </buildGradleAdditions>
 
   <buildscriptGradleAdditions>
