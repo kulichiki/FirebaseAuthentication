@@ -25,14 +25,19 @@ void UOAuthSignIn::Activate()
 		{
 		case EOAuthProvider::Apple:
 			JProviderURL = Env->NewStringUTF("apple.com");
+			break;
 		case EOAuthProvider::Github:
 			JProviderURL = Env->NewStringUTF("github.com");
+			break;
 		case EOAuthProvider::Microsoft:
 			JProviderURL = Env->NewStringUTF("microsoft.com");
+			break;
 		case EOAuthProvider::Yahoo:
 			JProviderURL = Env->NewStringUTF("yahoo.com");
+			break;
 		case EOAuthProvider::Twitter:
 			JProviderURL = Env->NewStringUTF("twitter.com");
+			break;
 		}
 		
 		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_OAuthSignIn", "(Ljava/lang/String;)V", false);
