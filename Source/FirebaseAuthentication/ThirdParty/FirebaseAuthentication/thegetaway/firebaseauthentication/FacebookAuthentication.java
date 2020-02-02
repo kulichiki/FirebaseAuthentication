@@ -93,4 +93,13 @@ public class FacebookAuthentication
             }
         });
     }
+	
+	// Handler
+	private void Handler(int requestCode)
+	{
+		if (requestCode == FACEBOOK_SIGNIN_RC)
+		{
+			FacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
+		}
+	}
 }

@@ -24,8 +24,8 @@
       dst="$S(BuildDir)/gradle/app/google-services.json"/>
 
     <copyDir 
-      src="$S(PluginDir)/ThirdParty/FirebaseAuthentication/src"
-      dst="$S(BuildDir)/gradle/app/src" />
+      src="$S(PluginDir)/ThirdParty/FirebaseAuthentication/thegetaway/"
+      dst="$S(BuildDir)/gradle/app/src/main/java/com/thegetaway/" />
   </prebuildCopies>
   
   <androidManifestUpdates>
@@ -46,14 +46,11 @@
   </androidManifestUpdates>
   
 	<AARImports>
-    <insertValue value="com.google.firebase,firebase-core,16.0.9" />
-    <insertNewline/>
-
-    <insertValue value="com.google.firebase,firebase-auth,16.2.1" />
-    <insertNewline/>
-
-    <insertValue value="com.facebook.android,facebook-login,4.42.0" />
-    <insertNewline/>
+    <insert>
+      implementation 'com.google.firebase:firebase-core:16.0.9'
+      implementation 'com.google.firebase:firebase-auth:16.2.1'
+      implementation 'com.facebook.android:facebook-login:4.42.0'
+    </insert>
 
     <replace find="play-services-auth,11.8.0"   with="play-services-auth,16.0.0"/>
     <replace find="play-services-games,11.8.0"  with="play-services-games,16.0.0"/>
@@ -91,29 +88,5 @@
       }
     </insert>
   </buildscriptGradleAdditions>
-
-  
-  <gameActivityOnActivityResultAdditions>
-    <insert>
-      if (requestCode == GOOGLE_SIGNIN_RC)
-      {
-          Task&lt;GoogleSignInAccount&gt; Task = GoogleSignIn.getSignedInAccountFromIntent(data);
-          try
-          {
-              GoogleSignInAccount SignInAccount = Task.getResult(ApiException.class);
-              FirebaseAuthWithGoogle(SignInAccount);
-          }
-          catch (ApiException e)
-          {
-              NativeFirebaseResultCode(e.getStatusCode());
-          }
-      }
-
-      if (requestCode == FACEBOOK_SIGNIN_RC)
-      {
-          FacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
-      }
-    </insert>
-  </gameActivityOnActivityResultAdditions>
 
 </root>

@@ -95,4 +95,22 @@ public class GoogleAuthentication
             }
         });
     }
+	
+	// Handler
+	private void Handler(int requestCode)
+	{
+		if (requestCode == GOOGLE_SIGNIN_RC)
+		{
+			Task<GoogleSignInAccount> Task = GoogleSignIn.getSignedInAccountFromIntent(data);
+			try
+			{
+				GoogleSignInAccount SignInAccount = Task.getResult(ApiException.class);
+				FirebaseAuthWithGoogle(SignInAccount);
+			}
+			catch (ApiException e)
+			{
+				NativeFirebaseResultCode(e.getStatusCode());
+			}
+		}
+	}
 }
