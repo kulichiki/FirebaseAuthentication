@@ -21,11 +21,11 @@
   <prebuildCopies>
     <copyFile 
       src="$S(PluginDir)/../../../../Build/Android/google-services.json" 
-      dst="$S(BuildDir)/gradle/app/google-services.json"/>
+      dst="$S(BuildDir)/gradle/FirebaseAuthentication/google-services.json"/>
 
     <copyDir 
-      src="$S(PluginDir)/ThirdParty/FirebaseAuthentication/thegetaway/"
-      dst="$S(BuildDir)/gradle/app/src/main/java/com/thegetaway/" />
+      src="$S(PluginDir)/ThirdParty/FirebaseAuthentication/"
+      dst="$S(BuildDir)/JavaLibs/FirebaseAuthentication" />
   </prebuildCopies>
   
   <androidManifestUpdates>
@@ -46,12 +46,6 @@
   </androidManifestUpdates>
   
 	<AARImports>
-    <insert>
-      implementation 'com.google.firebase:firebase-core:16.0.9'
-      implementation 'com.google.firebase:firebase-auth:16.2.1'
-      implementation 'com.facebook.android:facebook-login:4.42.0'
-    </insert>
-
     <replace find="play-services-auth,11.8.0"   with="play-services-auth,16.0.0"/>
     <replace find="play-services-games,11.8.0"  with="play-services-games,16.0.0"/>
     <replace find="play-services-nearby,11.8.0" with="play-services-nearby,16.0.0"/>
@@ -75,8 +69,7 @@
                   it.resValue "string", "FacebookAppID", FACEBOOK_APP_ID
 			        }
           }
-      }      
-      apply plugin: 'com.google.gms.google-services'
+      }
     </insert>
   </buildGradleAdditions>
 

@@ -1,0 +1,20 @@
+apply plugin: 'com.google.gms.google-services'
+
+android 
+{
+	ReplaceInManifest("ApplicationID", rootProject.PACKAGE_NAME)
+}
+
+def ReplaceInManifest(FromString, ToString)
+{
+	def ManifestFile = "$projectDir/src/main/AndroidManifest.xml"
+	def UpdatedContent = new File(ManifestFile).getText('UTF-8').replaceAll(FromString, ToString)
+	new File(ManifestFile).write(UpdatedContent, 'UTF-8')
+}
+
+dependencies
+{
+	implementation 'com.google.firebase:firebase-core:16.0.9'
+	implementation 'com.google.firebase:firebase-auth:16.2.1'
+	implementation 'com.facebook.android:facebook-login:4.42.0'
+}
