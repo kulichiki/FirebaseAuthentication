@@ -1,0 +1,149 @@
+package com.thegetaway.firebaseauthentication;
+
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+
+import java.util.concurrent.TimeUnit;
+
+import static com.thegetaway.firebaseauthentication.BaseAuthentication.NativeFirebaseResultCode;
+
+public class PhoneAuthentication
+{
+    private static final int VERIFY_FAILED = 23;
+    private static final int INVALID_CODE = 24;
+    private static final int INVALID_PHONE_NUMBER = 25;
+    private static final int SMS_QUOTA = 26;
+    private static final int RESEND_TOKEN_NOT_VALID = 27;
+
+    private String VerificationID;
+    private PhoneAuthProvider.ForceResendingToken ResendToken;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks AuthCallbacks;
+    private FirebaseAuth FirebaseAuthInstance;
+
+    public PhoneAuthentication()
+    {
+        FirebaseAuthInstance = FirebaseAuth.getInstance();
+		
+		// Initialize phone auth callbacks
+		AuthCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
+		{
+			@Override
+			public void onVerificationCompleted(PhoneAuthCredential Credential)
+			{
+				// This callback will be invoked in two situations:
+				// 1 - Instant verification. In some cases the phone number can be instantly
+				//     verified without needing to send or enter a verification code.
+				// 2 - Auto-retrieval. On some devices Google Play services can automatically
+				//     detect the incoming verification SMS and perform verification without
+				//     user action.
+				SignInWithPhoneAuthCredential(Credential);
+				NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+			}
+		
+			@Override
+			public void onVerificationFailed(FirebaseException e)
+			{
+				// This callback is invoked in an invalid request for verification is made,
+				// for instance if the the phone number format is not valid.
+				if (e instanceof FirebaseAuthInvalidCredentialsException)
+				{
+					// Invalid phone number
+					NativeFirebaseResultCode(INVALID_PHONE_NUMBER);
+				}
+				else if (e instanceof FirebaseTooManyRequestsException)
+				{
+					// The SMS quota for the project has been exceeded
+					NativeFirebaseResultCode(SMS_QUOTA);
+				}
+			}
+		
+			@Override
+			public void onCodeSent(@NonNull String AuthVerificationID, @NonNull PhoneAuthProvider.ForceResendingToken Token)
+			{
+				// The SMS verification code has been sent to the provided phone number, we
+				// now need to ask the user to enter the code and then construct a credential
+				// by combining the code with a verification ID.
+		
+				// Save verification ID and resending token so we can use them later
+				VerificationID = AuthVerificationID;
+				ResendToken = Token;
+				NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+			}
+		};
+    }
+
+    public void StartPhoneNumberVerification(String PhoneNumber, int Timeout)
+    {
+        // Phone number to verify
+        // Timeout duration
+        // Unit of timeout
+        // Activity (for callback binding)
+        // OnVerificationStateChangedCallbacks
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(PhoneNumber, Timeout, TimeUnit.SECONDS, this, AuthCallbacks);
+    }
+
+    public void VerifyPhoneNumberWithCode(String Code)
+    {
+        if (VerificationID != null)
+        {
+            PhoneAuthCredential Credential = PhoneAuthProvider.getCredential(VerificationID, Code);
+            SignInWithPhoneAuthCredential(Credential);
+        }
+    }
+
+    public void ResendVerificationCode(String PhoneNumber, int Timeout)
+    {
+        if (ResendToken != null)
+        {
+            // Phone number to verify
+            // Timeout duration
+            // Unit of timeout
+            // Activity (for callback binding)
+            // OnVerificationStateChangedCallbacks
+            // ForceResendingToken from callbacks
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(PhoneNumber, Timeout, TimeUnit.SECONDS, this, AuthCallbacks, ResendToken);
+        }
+        else
+        {
+            NativeFirebaseResultCode(RESEND_TOKEN_NOT_VALID);
+        }
+    }
+
+    // Internal
+    private void SignInWithPhoneAuthCredential(PhoneAuthCredential Credential)
+    {
+        FirebaseAuthInstance.signInWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> Task)
+            {
+                if (Task.isSuccessful())
+                {
+                    // Sign in success
+                    NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                }
+                else
+                {
+                    // Sign in failed
+                    if (Task.getException() instanceof FirebaseAuthInvalidCredentialsException)
+                    {
+                        // The verification code entered was invalid
+                        NativeFirebaseResultCode(INVALID_CODE);
+                    }
+                    else
+                    {
+                        NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                    }
+                }
+            }
+        });
+    }
+}
