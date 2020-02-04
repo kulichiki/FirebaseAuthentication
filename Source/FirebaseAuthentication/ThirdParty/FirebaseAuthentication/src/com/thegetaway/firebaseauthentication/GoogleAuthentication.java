@@ -1,10 +1,14 @@
 package com.thegetaway.firebaseauthentication;
 
+import android.app.Activity;
 import android.content.Intent;
-
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,22 +26,25 @@ public class GoogleAuthentication
 
     private GoogleSignInClient SignInClient;
     private FirebaseAuth FirebaseAuthInstance;
+    private Activity MainActivity;
 
-    public GoogleAuthentication()
+    public GoogleAuthentication(Activity MainActivity)
     {
-        FirebaseAuthInstance = FirebaseAuth.getInstance();
-		
+        this.FirebaseAuthInstance = FirebaseAuth.getInstance();
+        this.MainActivity = MainActivity;
+
+        String WebClientID = this.MainActivity.getString(R.string.default_web_client_id);
 		GoogleSignInOptions SignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-											.requestIdToken(getString(R.string.default_web_client_id))
+											.requestIdToken(WebClientID)
 											.requestEmail()
 											.build();
-		SignInClient = GoogleSignIn.getClient(this, SignInOptions);
+		this.SignInClient = GoogleSignIn.getClient(this.MainActivity, SignInOptions);
     }
 
     public void GoogleSignIn()
     {
         Intent SignInIntent = SignInClient.getSignInIntent();
-        startActivityForResult(SignInIntent, GOOGLE_SIGNIN_RC);
+        MainActivity.startActivityForResult(SignInIntent, GOOGLE_SIGNIN_RC);
     }
 
     public void GoogleSignOut()
@@ -45,7 +52,7 @@ public class GoogleAuthentication
         FirebaseAuthInstance.signOut();
 
         // Google sign out
-        SignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>()
+        SignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> Task)
@@ -61,7 +68,7 @@ public class GoogleAuthentication
         FirebaseAuthInstance.signOut();
 
         // Google revoke access
-        SignInClient.revokeAccess().addOnCompleteListener(this, new OnCompleteListener<Void>()
+        SignInClient.revokeAccess().addOnCompleteListener(new OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> Task)
@@ -76,7 +83,7 @@ public class GoogleAuthentication
     private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
     {
         AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
-        FirebaseAuthInstance.signInWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        FirebaseAuthInstance.signInWithCredential(Credential).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
             public void onComplete(@NonNull Task<AuthResult> Task)
@@ -97,11 +104,11 @@ public class GoogleAuthentication
     }
 	
 	// Handler
-	private void Handler(int requestCode)
+	private void Handler(int RequestCode, Intent Data)
 	{
-		if (requestCode == GOOGLE_SIGNIN_RC)
+		if (RequestCode == GOOGLE_SIGNIN_RC)
 		{
-			Task<GoogleSignInAccount> Task = GoogleSignIn.getSignedInAccountFromIntent(data);
+			Task<GoogleSignInAccount> Task = GoogleSignIn.getSignedInAccountFromIntent(Data);
 			try
 			{
 				GoogleSignInAccount SignInAccount = Task.getResult(ApiException.class);

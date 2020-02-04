@@ -1,10 +1,13 @@
 package com.thegetaway.firebaseauthentication;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -26,14 +29,16 @@ public class FacebookAuthentication
     private CallbackManager FacebookCallbackManager;
     private FacebookCallback<LoginResult> LoginCallback;
     private FirebaseAuth FirebaseAuthInstance;
+    private Activity MainActivity;
 
-    public FacebookAuthentication()
+    public FacebookAuthentication(Activity MainActivity)
     {
-        FirebaseAuthInstance = FirebaseAuth.getInstance();
-		
+        this.FirebaseAuthInstance = FirebaseAuth.getInstance();
+		this.MainActivity = MainActivity;
+
 		// Initialize facebook callbacks
-		FacebookCallbackManager = CallbackManager.Factory.create();
-		LoginCallback = new FacebookCallback<LoginResult>()
+		this.FacebookCallbackManager = CallbackManager.Factory.create();
+		this.LoginCallback = new FacebookCallback<LoginResult>()
 		{
 			@Override
 			public void onSuccess(LoginResult Result)
@@ -62,7 +67,7 @@ public class FacebookAuthentication
         String[] ScopeFields = { "email", "public_profile" };
         LoginManager Manager = LoginManager.getInstance();
         Manager.registerCallback(FacebookCallbackManager, LoginCallback);
-        Manager.logInWithReadPermissions(this, Arrays.asList(ScopeFields));
+        Manager.logInWithReadPermissions(MainActivity, Arrays.asList(ScopeFields));
     }
 
     public void FacebookSignOut()
@@ -75,7 +80,7 @@ public class FacebookAuthentication
     private void HandleFacebookAccessToken(AccessToken Token)
     {
         AuthCredential Credential = FacebookAuthProvider.getCredential(Token.getToken());
-        FirebaseAuthInstance.signInWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        FirebaseAuthInstance.signInWithCredential(Credential).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
             public void onComplete(@NonNull Task<AuthResult> Task)
@@ -95,11 +100,9 @@ public class FacebookAuthentication
     }
 	
 	// Handler
-	private void Handler(int requestCode)
+	private void Handler(int RequestCode, int ResultCode, Intent Data)
 	{
-		if (requestCode == FACEBOOK_SIGNIN_RC)
-		{
-			FacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
-		}
+		if (RequestCode == FACEBOOK_SIGNIN_RC)
+			FacebookCallbackManager.onActivityResult(RequestCode, ResultCode, Data);
 	}
 }

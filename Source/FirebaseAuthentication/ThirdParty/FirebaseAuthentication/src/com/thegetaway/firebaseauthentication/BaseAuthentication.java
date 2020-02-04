@@ -7,7 +7,7 @@ public class BaseAuthentication
     public static native void NativeFirebaseResultCode(int StatusCode);
     public static native void NativeFirebaseResult();
 
-    public static void AndroidThunkJava_FirebaseAccountSignOut()
+    public static void FirebaseAccountSignOut()
     {
         FirebaseAuth.getInstance().signOut();
     }

@@ -44,13 +44,6 @@
     </addElements>
     <addPermission android:name="android.permission.INTERNET" />
   </androidManifestUpdates>
-  
-	<AARImports>
-    <replace find="play-services-auth,11.8.0"   with="play-services-auth,16.0.0"/>
-    <replace find="play-services-games,11.8.0"  with="play-services-games,16.0.0"/>
-    <replace find="play-services-nearby,11.8.0" with="play-services-nearby,16.0.0"/>
-    <replace find="play-services-plus,11.8.0"   with="play-services-plus,16.0.0"/>
-  </AARImports>
 
   <gradleProperties>
     <insertValue value="FACEBOOK_APP_ID=$S(FacebookAppID)" />
@@ -70,16 +63,17 @@
 			        }
           }
       }
-    </insert>
-  </buildGradleAdditions>
-
-  <buildscriptGradleAdditions>
-    <insert>
-      dependencies
+      
+      allprojects
       {
-          classpath 'com.google.gms:google-services:4.0.0'
+          configurations.all
+          {
+              resolutionStrategy.force "com.google.android.gms:play-services-auth:16.0.1"
+              resolutionStrategy.force "com.google.android.gms:play-services-base:16.0.1"
+              resolutionStrategy.force "com.google.android.gms:play-services-basement:16.0.1"
+          }
       }
     </insert>
-  </buildscriptGradleAdditions>
-
+  </buildGradleAdditions>
+  
 </root>

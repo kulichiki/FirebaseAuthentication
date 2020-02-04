@@ -17,12 +17,12 @@ public class EmailPasswordAuthentication
 
     public EmailPasswordAuthentication()
     {
-        FirebaseAuthInstance = FirebaseAuth.getInstance();
+        this.FirebaseAuthInstance = FirebaseAuth.getInstance();
     }
 
     public void CreateAccount(String Email, String Password)
     {
-        FirebaseAuthInstance.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        FirebaseAuthInstance.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
             public void onComplete(@NonNull Task<AuthResult> Task)
@@ -43,7 +43,7 @@ public class EmailPasswordAuthentication
 
     public void EmailPasswordSignIn(String Email, String Password)
     {
-        FirebaseAuthInstance.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        FirebaseAuthInstance.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
             public void onComplete(@NonNull Task<AuthResult> Task)
@@ -66,7 +66,7 @@ public class EmailPasswordAuthentication
     {
         // Send verification email
         final FirebaseUser User = FirebaseAuthInstance.getCurrentUser();
-        User.sendEmailVerification().addOnCompleteListener(this, new OnCompleteListener<Void>()
+        User.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> Task)

@@ -1,5 +1,6 @@
 package com.thegetaway.firebaseauthentication;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -14,15 +15,17 @@ import static com.thegetaway.firebaseauthentication.BaseAuthentication.NativeFir
 public class OAuthAuthentication
 {
     private FirebaseAuth FirebaseAuthInstance;
+    private Activity MainActivity;
 
-    public OAuthAuthentication()
+    public OAuthAuthentication(Activity MainActivity)
     {
-        FirebaseAuthInstance = FirebaseAuth.getInstance();
+        this.FirebaseAuthInstance = FirebaseAuth.getInstance();
+        this.MainActivity = MainActivity;
     }
 
-    private void AndroidThunkJava_OAuthSignIn(String ProviderID)
+    private void OAuthSignIn(String ProviderID)
     {
-        FirebaseAuthInstance.startActivityForSignInWithProvider(this, OAuthProvider.newBuilder(ProviderID, FirebaseAuthInstance).build())
+        FirebaseAuthInstance.startActivityForSignInWithProvider(MainActivity, OAuthProvider.newBuilder(ProviderID, FirebaseAuthInstance).build())
         .addOnSuccessListener(new OnSuccessListener<AuthResult>()
         {
             @Override

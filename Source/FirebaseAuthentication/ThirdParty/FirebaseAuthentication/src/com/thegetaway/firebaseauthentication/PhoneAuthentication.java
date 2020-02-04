@@ -1,10 +1,13 @@
 package com.thegetaway.firebaseauthentication;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -27,13 +30,15 @@ public class PhoneAuthentication
     private PhoneAuthProvider.ForceResendingToken ResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks AuthCallbacks;
     private FirebaseAuth FirebaseAuthInstance;
+    private Activity MainActivity;
 
-    public PhoneAuthentication()
+    public PhoneAuthentication(Activity MainActivity)
     {
-        FirebaseAuthInstance = FirebaseAuth.getInstance();
+        this.FirebaseAuthInstance = FirebaseAuth.getInstance();
+        this.MainActivity = MainActivity;
 		
 		// Initialize phone auth callbacks
-		AuthCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
+		this.AuthCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
 		{
 			@Override
 			public void onVerificationCompleted(PhoneAuthCredential Credential)
@@ -82,12 +87,14 @@ public class PhoneAuthentication
 
     public void StartPhoneNumberVerification(String PhoneNumber, int Timeout)
     {
-        // Phone number to verify
-        // Timeout duration
-        // Unit of timeout
-        // Activity (for callback binding)
-        // OnVerificationStateChangedCallbacks
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(PhoneNumber, Timeout, TimeUnit.SECONDS, this, AuthCallbacks);
+        PhoneAuthProvider.getInstance().verifyPhoneNumber
+        (
+            PhoneNumber,                                // Phone number to verify
+            Timeout,                                    // Timeout duration
+            TimeUnit.SECONDS,                           // Unit of timeout
+            MainActivity,                               // Activity (for callback binding)
+            AuthCallbacks                               // OnVerificationStateChangedCallbacks
+        );
     }
 
     public void VerifyPhoneNumberWithCode(String Code)
@@ -103,13 +110,15 @@ public class PhoneAuthentication
     {
         if (ResendToken != null)
         {
-            // Phone number to verify
-            // Timeout duration
-            // Unit of timeout
-            // Activity (for callback binding)
-            // OnVerificationStateChangedCallbacks
-            // ForceResendingToken from callbacks
-            PhoneAuthProvider.getInstance().verifyPhoneNumber(PhoneNumber, Timeout, TimeUnit.SECONDS, this, AuthCallbacks, ResendToken);
+            PhoneAuthProvider.getInstance().verifyPhoneNumber
+            (
+                PhoneNumber,                            // Phone number to verify
+                Timeout,                                // Timeout duration
+                TimeUnit.SECONDS,                       // Unit of timeout
+                MainActivity,                           // Activity (for callback binding)
+                AuthCallbacks,                          // OnVerificationStateChangedCallbacks
+                ResendToken                             // ForceResendingToken from callbacks
+            );
         }
         else
         {
@@ -120,7 +129,7 @@ public class PhoneAuthentication
     // Internal
     private void SignInWithPhoneAuthCredential(PhoneAuthCredential Credential)
     {
-        FirebaseAuthInstance.signInWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        FirebaseAuthInstance.signInWithCredential(Credential).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
             public void onComplete(@NonNull Task<AuthResult> Task)

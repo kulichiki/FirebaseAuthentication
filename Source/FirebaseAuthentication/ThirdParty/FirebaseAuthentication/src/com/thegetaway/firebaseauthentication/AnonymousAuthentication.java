@@ -18,12 +18,12 @@ public class AnonymousAuthentication
 
     public AnonymousAuthentication()
     {
-        FirebaseAuthInstance = FirebaseAuth.getInstance();
+        this.FirebaseAuthInstance = FirebaseAuth.getInstance();
     }
 
     public void AnonymousSignIn()
     {
-        FirebaseAuthInstance.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        FirebaseAuthInstance.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
             public void onComplete(@NonNull Task<AuthResult> Task)
@@ -47,7 +47,7 @@ public class AnonymousAuthentication
     {
         // Create EmailAuthCredential with email and password
         AuthCredential Credential = EmailAuthProvider.getCredential(Email, Password);
-        FirebaseAuthInstance.getCurrentUser().linkWithCredential(Credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        FirebaseAuthInstance.getCurrentUser().linkWithCredential(Credential).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
             public void onComplete(@NonNull Task<AuthResult> Task)
