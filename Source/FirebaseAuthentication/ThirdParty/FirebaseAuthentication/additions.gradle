@@ -1,18 +1,15 @@
 apply plugin: 'com.google.gms.google-services'
 
-android 
+android
 {
-	ReplaceInManifest("ApplicationID", rootProject.PACKAGE_NAME)
+	android.libraryVariants.all 
+	{ 
+		variant ->
+		project.tasks.getByName('process' + variant.name.capitalize() + 'GoogleServices').enabled = false
+	}
 }
 
-def ReplaceInManifest(FromString, ToString)
-{
-	def ManifestFile = "$projectDir/src/main/AndroidManifest.xml"
-	def UpdatedContent = new File(ManifestFile).getText('UTF-8').replaceAll(FromString, ToString)
-	new File(ManifestFile).write(UpdatedContent, 'UTF-8')
-}
-
-buildscript 
+buildscript
 {
     repositories 
 	{

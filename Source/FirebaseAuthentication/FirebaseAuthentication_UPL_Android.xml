@@ -21,7 +21,7 @@
   <prebuildCopies>
     <copyFile 
       src="$S(PluginDir)/../../../../Build/Android/google-services.json" 
-      dst="$S(BuildDir)/gradle/FirebaseAuthentication/google-services.json"/>
+      dst="$S(BuildDir)/gradle/app/google-services.json"/>
 
     <copyDir 
       src="$S(PluginDir)/ThirdParty/FirebaseAuthentication/"
@@ -52,6 +52,8 @@
 
   <buildGradleAdditions>
     <insert>
+      apply plugin: 'com.google.gms.google-services'
+      
       android 
       {
           buildTypes 
@@ -69,11 +71,19 @@
           configurations.all
           {
               resolutionStrategy.force "com.google.android.gms:play-services-auth:16.0.1"
-              resolutionStrategy.force "com.google.android.gms:play-services-base:16.0.1"
               resolutionStrategy.force "com.google.android.gms:play-services-basement:16.0.1"
           }
       }
     </insert>
   </buildGradleAdditions>
+  
+  <buildscriptGradleAdditions>
+    <insert>
+      dependencies
+      {
+          classpath 'com.google.gms:google-services:4.0.0'
+      }
+    </insert>
+  </buildscriptGradleAdditions>
   
 </root>
