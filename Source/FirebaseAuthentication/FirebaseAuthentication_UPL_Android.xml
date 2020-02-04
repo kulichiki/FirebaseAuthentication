@@ -17,16 +17,6 @@
       property="FacebookAppID" 
       default="" />
   </init>
-
-  <prebuildCopies>
-    <copyFile 
-      src="$S(PluginDir)/../../../../Build/Android/google-services.json" 
-      dst="$S(BuildDir)/gradle/app/google-services.json"/>
-
-    <copyDir 
-      src="$S(PluginDir)/ThirdParty/FirebaseAuthentication/"
-      dst="$S(BuildDir)/JavaLibs/FirebaseAuthentication" />
-  </prebuildCopies>
   
   <androidManifestUpdates>
     <addElements tag="application">
@@ -50,6 +40,34 @@
     <insertNewline/>
   </gradleProperties>
 
+  <!-- Copy Library directory & google-services.json -->
+  <gradleCopies>
+    <copyDir
+      src="$S(PluginDir)/ThirdParty/Android/FirebaseAuthentication/"
+      dst="$S(BuildDir)/gradle/app/src/main/java/com/thegetaway/firebaseauthentication/"/>
+    
+    <copyFile
+      src="$S(PluginDir)/../../../../Build/Android/google-services.json"
+      dst="$S(BuildDir)/gradle/app/google-services.json"/>
+  </gradleCopies>
+
+  <!-- Import dependencies -->
+  <AARImports>
+    <insertValue value="com.google.firebase,firebase-core,16.0.9" />
+    <insertNewline/>
+
+    <insertValue value="com.google.firebase,firebase-auth,16.2.1" />
+    <insertNewline/>
+
+    <insertValue value="com.facebook.android,facebook-login,4.42.0" />
+    <insertNewline/>
+
+    <replace find="play-services-auth,11.8.0"   with="play-services-auth,16.0.0"/>
+    <replace find="play-services-games,11.8.0"  with="play-services-games,16.0.0"/>
+    <replace find="play-services-nearby,11.8.0" with="play-services-nearby,16.0.0"/>
+    <replace find="play-services-plus,11.8.0"   with="play-services-plus,16.0.0"/>
+  </AARImports>
+
   <buildGradleAdditions>
     <insert>
       apply plugin: 'com.google.gms.google-services'
@@ -65,18 +83,9 @@
 			        }
           }
       }
-      
-      allprojects
-      {
-          configurations.all
-          {
-              resolutionStrategy.force "com.google.android.gms:play-services-auth:16.0.1"
-              resolutionStrategy.force "com.google.android.gms:play-services-basement:16.0.1"
-          }
-      }
     </insert>
   </buildGradleAdditions>
-  
+
   <buildscriptGradleAdditions>
     <insert>
       dependencies
@@ -85,5 +94,18 @@
       }
     </insert>
   </buildscriptGradleAdditions>
+  
+  <!-- Adding some code to GameActivity.java -->
+  <gameActivityImportAdditions>
+    <insert>
+      import com.thegetaway.firebaseauthentication.AnonymousAuthentication;
+    </insert>
+  </gameActivityImportAdditions>
+  
+  <gameActivityOnCreateAdditions>
+    <insert>
+      AnonymousAuthentication a = new AnonymousAuthentication();
+    </insert>
+  </gameActivityOnCreateAdditions>
   
 </root>
