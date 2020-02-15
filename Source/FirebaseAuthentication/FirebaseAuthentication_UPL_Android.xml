@@ -76,11 +76,11 @@
       {
           buildTypes 
           {
-			        buildTypes.each
-				      {
-				          it.signingConfig signingConfigs.release
+              buildTypes.each
+              {
+                  it.signingConfig signingConfigs.release
                   it.resValue "string", "FacebookAppID", FACEBOOK_APP_ID
-			        }
+              }
           }
       }
     </insert>
@@ -95,17 +95,27 @@
     </insert>
   </buildscriptGradleAdditions>
   
-  <!-- Adding some code to GameActivity.java -->
+  <!-- GameActivity.java additions -->
   <gameActivityImportAdditions>
     <insert>
+      import com.thegetaway.firebaseauthentication.EmailPasswordAuthentication;
       import com.thegetaway.firebaseauthentication.AnonymousAuthentication;
+      import com.thegetaway.firebaseauthentication.FacebookAuthentication;
+      import com.thegetaway.firebaseauthentication.GoogleAuthentication;
+      import com.thegetaway.firebaseauthentication.OAuthAuthentication;
+      import com.thegetaway.firebaseauthentication.PhoneAuthentication;
     </insert>
   </gameActivityImportAdditions>
   
-  <gameActivityOnCreateAdditions>
+  <gameActivityClassAdditions>
     <insert>
-      AnonymousAuthentication a = new AnonymousAuthentication();
+      public EmailPasswordAuthentication EmailPasswordAuth = new EmailPasswordAuthentication();;
+      public AnonymousAuthentication AnonymousAuth = new AnonymousAuthentication();;
+      public FacebookAuthentication FacebookAuth = new FacebookAuthentication(this);;
+      public GoogleAuthentication GoogleAuth = new GoogleAuthentication(this);;
+      public PhoneAuthentication PhoneAuth = new PhoneAuthentication(this);;
+      public OAuthAuthentication OAuth = new OAuthAuthentication(this);;
     </insert>
-  </gameActivityOnCreateAdditions>
+  </gameActivityClassAdditions>
   
 </root>
