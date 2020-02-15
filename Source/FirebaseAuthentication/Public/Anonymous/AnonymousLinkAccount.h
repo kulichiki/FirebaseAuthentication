@@ -1,16 +1,16 @@
 #pragma once
 
 #include "FirebaseResultCode.h"
-#include "AnonymouslyLinkAccount.generated.h"
+#include "AnonymousLinkAccount.generated.h"
 
 UCLASS()
-class FIREBASEAUTHENTICATION_API UAnonymouslyLinkAccount : public UFirebaseResultCode
+class FIREBASEAUTHENTICATION_API UAnonymousLinkAccount : public UFirebaseResultCode
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UAnonymouslyLinkAccount* AnonymouslyLinkAccount(FString Email, FString Password);
+	static UAnonymousLinkAccount* AnonymousLinkAccount(FString Email, FString Password);
 	void Activate() override;
 
 private:

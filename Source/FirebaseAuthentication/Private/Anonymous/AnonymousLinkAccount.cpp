@@ -1,4 +1,4 @@
-#include "AnonymouslyLinkAccount.h"
+#include "AnonymousLinkAccount.h"
 #include "FirebaseAuthentication.h"
 
 #if PLATFORM_ANDROID
@@ -6,15 +6,15 @@
 	#include "Android/AndroidApplication.h"
 #endif
 
-UAnonymouslyLinkAccount* UAnonymouslyLinkAccount::AnonymouslyLinkAccount(FString Email, FString Password)
+UAnonymousLinkAccount* UAnonymousLinkAccount::AnonymousLinkAccount(FString Email, FString Password)
 {
-	UAnonymouslyLinkAccount* BlueprintNode = NewObject<UAnonymouslyLinkAccount>();
+	UAnonymousLinkAccount* BlueprintNode = NewObject<UAnonymousLinkAccount>();
 	BlueprintNode->Email = Email;
 	BlueprintNode->Password = Password;
 	return BlueprintNode;
 }
 
-void UAnonymouslyLinkAccount::Activate()
+void UAnonymousLinkAccount::Activate()
 {
 	Super::Activate();
 
@@ -33,7 +33,7 @@ void UAnonymouslyLinkAccount::Activate()
 #endif
 }
 
-void UAnonymouslyLinkAccount::FirebaseResultCode(int StatusCode)
+void UAnonymousLinkAccount::FirebaseResultCode(int StatusCode)
 {
 	ECommonStatusCode Code = ECommonStatusCode(StatusCode);
 	if (StatusCode == 12500)
