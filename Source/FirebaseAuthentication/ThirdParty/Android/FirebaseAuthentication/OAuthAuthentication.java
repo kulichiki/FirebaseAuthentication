@@ -23,7 +23,7 @@ public class OAuthAuthentication
         this.MainActivity = MainActivity;
     }
 
-    private void OAuthSignIn(String ProviderID)
+    public void OAuthSignIn(String ProviderID)
     {
         FirebaseAuthInstance.startActivityForSignInWithProvider(MainActivity, OAuthProvider.newBuilder(ProviderID, FirebaseAuthInstance).build())
         .addOnSuccessListener(new OnSuccessListener<AuthResult>()
