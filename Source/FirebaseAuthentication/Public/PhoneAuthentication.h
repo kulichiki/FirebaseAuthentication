@@ -9,13 +9,13 @@ class FIREBASEAUTHENTICATION_API UPhoneAuthentication : public UFirebaseResultCo
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|PhoneAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UPhoneAuthentication* StartPhoneNumberVerification(FString PhoneNumber, int Timeout);
 
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|PhoneAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UPhoneAuthentication* ResendVerificationCode(FString PhoneNumber, int Timeout);
 
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|PhoneAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UPhoneAuthentication* VerifyPhoneNumberWithCode(FString Code);
 
 private:

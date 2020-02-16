@@ -9,13 +9,13 @@ class FIREBASEAUTHENTICATION_API UEmailPasswordAuthentication : public UFirebase
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|EmailPasswordAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UEmailPasswordAuthentication* EmailPasswordSignIn(FString Email, FString Password);
 
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|EmailPasswordAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UEmailPasswordAuthentication* CreateAccount(FString Email, FString Password);
 
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|EmailPasswordAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UEmailPasswordAuthentication* SendEmailVerification();
 
 private:

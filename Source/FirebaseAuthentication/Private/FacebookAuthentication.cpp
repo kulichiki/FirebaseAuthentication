@@ -19,19 +19,6 @@ UFacebookAuthentication* UFacebookAuthentication::FacebookSignIn()
 	return NewObject<UFacebookAuthentication>();
 }
 
-UFacebookAuthentication* UFacebookAuthentication::FacebookSignOut()
-{
-#if PLATFORM_ANDROID
-	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
-	{
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_FacebookSignOut", "()V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID);
-	}
-#endif
-
-	return NewObject<UFacebookAuthentication>();
-}
-
 void UFacebookAuthentication::FirebaseResultCode(int StatusCode)
 {
 	ECommonStatusCode Code = ECommonStatusCode(StatusCode);

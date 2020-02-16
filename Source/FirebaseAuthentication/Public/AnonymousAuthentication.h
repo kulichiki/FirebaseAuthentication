@@ -9,10 +9,10 @@ class FIREBASEAUTHENTICATION_API UAnonymousAuthentication : public UFirebaseResu
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|AnonymousAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UAnonymousAuthentication* AnonymousSignIn();
 
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|AnonymousAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UAnonymousAuthentication* AnonymousLinkAccount(FString Email, FString Password);
 
 private:
