@@ -33,12 +33,16 @@ public class GoogleAuthentication
         this.FirebaseAuthInstance = FirebaseAuth.getInstance();
         this.MainActivity = MainActivity;
 
-        //String WebClientID = this.MainActivity.getString(R.string.default_web_client_id);
-		//GoogleSignInOptions SignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-		//									.requestIdToken(WebClientID)
-		//									.requestEmail()
-		//									.build();
-		//this.SignInClient = GoogleSignIn.getClient(this.MainActivity, SignInOptions);
+        // Get Web Client ID
+        int ResourceID = this.MainActivity.getResources().getIdentifier("default_web_client_id", "string", this.MainActivity.getPackageName());
+        String WebClientID = this.MainActivity.getString(ResourceID);
+
+        // Initialize Google Sign In
+		GoogleSignInOptions SignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+											.requestIdToken(WebClientID)
+											.requestEmail()
+											.build();
+		this.SignInClient = GoogleSignIn.getClient(this.MainActivity, SignInOptions);
     }
 
     public void GoogleSignIn()

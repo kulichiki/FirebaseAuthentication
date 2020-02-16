@@ -106,16 +106,27 @@
       import com.thegetaway.firebaseauthentication.PhoneAuthentication;
     </insert>
   </gameActivityImportAdditions>
+
+  <gameActivityOnCreateAdditions>
+    <insert>
+      // Initialize classes
+      EmailPasswordAuth = new EmailPasswordAuthentication();
+      AnonymousAuth = new AnonymousAuthentication();
+      FacebookAuth = new FacebookAuthentication(this);
+      GoogleAuth = new GoogleAuthentication(this);
+      PhoneAuth = new PhoneAuthentication(this);
+      OAuth = new OAuthAuthentication(this);
+    </insert>
+  </gameActivityOnCreateAdditions>
   
   <gameActivityClassAdditions>
     <insert>
-      // Initialize classes
-      private EmailPasswordAuthentication EmailPasswordAuth = new EmailPasswordAuthentication();
-      private AnonymousAuthentication AnonymousAuth = new AnonymousAuthentication();
-      private FacebookAuthentication FacebookAuth = new FacebookAuthentication(this);
-      private GoogleAuthentication GoogleAuth = new GoogleAuthentication(this);
-      private PhoneAuthentication PhoneAuth = new PhoneAuthentication(this);
-      private OAuthAuthentication OAuth = new OAuthAuthentication(this);
+      private EmailPasswordAuthentication EmailPasswordAuth;
+      private AnonymousAuthentication AnonymousAuth;
+      private FacebookAuthentication FacebookAuth;
+      private GoogleAuthentication GoogleAuth;
+      private PhoneAuthentication PhoneAuth;
+      private OAuthAuthentication OAuth;
 
       // Email/Password Authentication methods
       private void AndroidThunkJava_EmailPasswordSignIn(String Email, String Password) { EmailPasswordAuth.EmailPasswordSignIn(Email, Password); }
