@@ -1,31 +1,31 @@
-#include "FirebaseAuthenticationLibrary.h"
+#include "AuthenticationLibrary.h"
 
 #if PLATFORM_ANDROID
 	#include "Android/AndroidJNI.h"
 	#include "Android/AndroidApplication.h"
 #endif
 
-void UFirebaseAuthenticationLibrary::AnonymousSignOut()
+void UAuthenticationLibrary::AnonymousSignOut()
 {
 	FirebaseSignOut();
 }
 
-void UFirebaseAuthenticationLibrary::EmailPasswordSignOut()
+void UAuthenticationLibrary::EmailPasswordSignOut()
 {
 	FirebaseSignOut();
 }
 
-void UFirebaseAuthenticationLibrary::PhoneSignOut()
+void UAuthenticationLibrary::PhoneSignOut()
 {
 	FirebaseSignOut();
 }
 
-void UFirebaseAuthenticationLibrary::OAuthSignOut()
+void UAuthenticationLibrary::OAuthSignOut()
 {
 	FirebaseSignOut();
 }
 
-void UFirebaseAuthenticationLibrary::FacebookSignOut()
+void UAuthenticationLibrary::FacebookSignOut()
 {
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
@@ -36,7 +36,7 @@ void UFirebaseAuthenticationLibrary::FacebookSignOut()
 #endif
 }
 
-void UFirebaseAuthenticationLibrary::FirebaseSignOut()
+void UAuthenticationLibrary::FirebaseSignOut()
 {
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())

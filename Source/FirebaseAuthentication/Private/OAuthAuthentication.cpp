@@ -1,4 +1,4 @@
-#include "OAuthSignIn.h"
+#include "OAuthAuthentication.h"
 #include "FirebaseAuthentication.h"
 
 #if PLATFORM_ANDROID
@@ -6,17 +6,8 @@
 	#include "Android/AndroidApplication.h"
 #endif
 
-UOAuthSignIn* UOAuthSignIn::OAuthSignIn(EOAuthProvider OAuthProvider)
+UOAuthAuthentication* UOAuthAuthentication::OAuthSignIn(EOAuthProvider OAuthProvider)
 {
-	UOAuthSignIn* BlueprintNode = NewObject<UOAuthSignIn>();
-	BlueprintNode->OAuthProvider = OAuthProvider;
-	return BlueprintNode;
-}
-
-void UOAuthSignIn::Activate()
-{
-	Super::Activate();
-
 #if PLATFORM_ANDROID	
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
@@ -39,16 +30,18 @@ void UOAuthSignIn::Activate()
 			JProviderURL = Env->NewStringUTF("twitter.com");
 			break;
 		}
-		
+
 		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_OAuthSignIn", "(Ljava/lang/String;)V", false);
 		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JProviderURL);
 
 		Env->DeleteLocalRef(JProviderURL);
 	}
 #endif
+
+	return NewObject<UOAuthAuthentication>();
 }
 
-void UOAuthSignIn::FirebaseResultCode(int StatusCode)
+void UOAuthAuthentication::FirebaseResultCode(int StatusCode)
 {
 	ECommonStatusCode Code = ECommonStatusCode(StatusCode);
 	if (StatusCode == 12500)

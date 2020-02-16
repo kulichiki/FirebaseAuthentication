@@ -2,10 +2,10 @@
 
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FirebaseAuthentication.h"
-#include "FirebaseAuthenticationLibrary.generated.h"
+#include "AuthenticationLibrary.generated.h"
 
 UCLASS()
-class FIREBASEAUTHENTICATION_API UFirebaseAuthenticationLibrary : public UBlueprintFunctionLibrary
+class FIREBASEAUTHENTICATION_API UAuthenticationLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
