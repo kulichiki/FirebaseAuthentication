@@ -44,16 +44,3 @@ UGoogleAuthentication* UGoogleAuthentication::GoogleRevokeAccess()
 
 	return NewObject<UGoogleAuthentication>();
 }
-
-void UGoogleAuthentication::FirebaseResultCode(int StatusCode)
-{
-	ECommonStatusCode Code = ECommonStatusCode(StatusCode);
-	if (StatusCode == 12500)
-		OnResult.Broadcast(ECommonStatusCode::SIGN_IN_FAILED);
-	else if (StatusCode == 12501)
-		OnResult.Broadcast(ECommonStatusCode::SIGN_IN_CANCELLED);
-	else if (StatusCode == 12502)
-		OnResult.Broadcast(ECommonStatusCode::SIGN_IN_CURRENTLY_IN_PROGRESS);
-	else
-		OnResult.Broadcast(Code);
-}

@@ -1,14 +1,19 @@
 #pragma once
 
-#include "FirebaseResultCode.h"
+#include "Kismet/BlueprintAsyncActionBase.h"
 #include "GoogleAuthentication.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGoogleAuthenticationResult, int, Result);
+
 UCLASS()
-class FIREBASEAUTHENTICATION_API UGoogleAuthentication : public UFirebaseResultCode
+class FIREBASEAUTHENTICATION_API UGoogleAuthentication : public UBlueprintAsyncActionBase
 {
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(BlueprintAssignable)
+	FGoogleAuthenticationResult OnResult;
+
 	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|GoogleAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UGoogleAuthentication* GoogleSignIn();
 
@@ -17,7 +22,4 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|GoogleAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UGoogleAuthentication* GoogleRevokeAccess();
-
-private:
-	void FirebaseResultCode(int StatusCode) override;
 };

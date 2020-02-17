@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "FirebaseAuthentication.h"
 #include "AuthenticationLibrary.generated.h"
 
 UCLASS()
