@@ -34,7 +34,6 @@ enum class ECommonStatusCode : uint8
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FResultCode, int);
-DECLARE_MULTICAST_DELEGATE(FResult);
 
 class FFirebaseAuthenticationModule : public IModuleInterface
 {
@@ -44,5 +43,4 @@ public:
 	static FFirebaseAuthenticationModule* GetModule();
 
 	FResultCode ResultCode;
-	FResult Result;
 };

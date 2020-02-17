@@ -10,10 +10,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
-import static com.thegetaway.firebaseauthentication.BaseAuthentication.NativeFirebaseResultCode;
-
 public class AnonymousAuthentication
 {
+    private static native void NativeAnonymousResult(int Result);
+
     private FirebaseAuth FirebaseAuthInstance;
 
     public AnonymousAuthentication()
@@ -31,13 +31,13 @@ public class AnonymousAuthentication
                 if (Task.isSuccessful())
                 {
                     // Sign in success
-                    NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                    NativeAnonymousResult(CommonStatusCodes.SUCCESS);
                 }
                 else
                 {
                     // Sign in failed
                     // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
-                    NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                    NativeAnonymousResult(CommonStatusCodes.ERROR);
                 }
             }
         });
@@ -55,13 +55,13 @@ public class AnonymousAuthentication
                 if (Task.isSuccessful())
                 {
                     // Sign in success
-                    NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                    NativeAnonymousResult(CommonStatusCodes.SUCCESS);
                 }
                 else
                 {
                     // Sign in failed
                     // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
-                    NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                    NativeAnonymousResult(CommonStatusCodes.ERROR);
                 }
             }
         });

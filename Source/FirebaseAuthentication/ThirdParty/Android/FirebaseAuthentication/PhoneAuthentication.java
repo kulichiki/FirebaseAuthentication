@@ -16,10 +16,10 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.thegetaway.firebaseauthentication.BaseAuthentication.NativeFirebaseResultCode;
-
 public class PhoneAuthentication
 {
+    private static native void NativePhoneResult(int Result);
+
     private static final int VERIFY_FAILED = 23;
     private static final int INVALID_CODE = 24;
     private static final int INVALID_PHONE_NUMBER = 25;
@@ -50,7 +50,7 @@ public class PhoneAuthentication
 				//     detect the incoming verification SMS and perform verification without
 				//     user action.
 				SignInWithPhoneAuthCredential(Credential);
-				NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+				NativePhoneResult(CommonStatusCodes.SUCCESS);
 			}
 		
 			@Override
@@ -61,12 +61,12 @@ public class PhoneAuthentication
 				if (e instanceof FirebaseAuthInvalidCredentialsException)
 				{
 					// Invalid phone number
-					NativeFirebaseResultCode(INVALID_PHONE_NUMBER);
+					NativePhoneResult(INVALID_PHONE_NUMBER);
 				}
 				else if (e instanceof FirebaseTooManyRequestsException)
 				{
 					// The SMS quota for the project has been exceeded
-					NativeFirebaseResultCode(SMS_QUOTA);
+					NativePhoneResult(SMS_QUOTA);
 				}
 			}
 		
@@ -80,7 +80,7 @@ public class PhoneAuthentication
 				// Save verification ID and resending token so we can use them later
 				VerificationID = AuthVerificationID;
 				ResendToken = Token;
-				NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+				NativePhoneResult(CommonStatusCodes.SUCCESS);
 			}
 		};
     }
@@ -122,7 +122,7 @@ public class PhoneAuthentication
         }
         else
         {
-            NativeFirebaseResultCode(RESEND_TOKEN_NOT_VALID);
+            NativePhoneResult(RESEND_TOKEN_NOT_VALID);
         }
     }
 
@@ -137,7 +137,7 @@ public class PhoneAuthentication
                 if (Task.isSuccessful())
                 {
                     // Sign in success
-                    NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                    NativePhoneResult(CommonStatusCodes.SUCCESS);
                 }
                 else
                 {
@@ -149,7 +149,7 @@ public class PhoneAuthentication
                     }
                     else
                     {
-                        NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                        NativePhoneResult(CommonStatusCodes.ERROR);
                     }
                 }
             }

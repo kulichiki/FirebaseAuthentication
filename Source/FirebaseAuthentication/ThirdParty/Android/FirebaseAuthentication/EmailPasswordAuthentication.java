@@ -9,10 +9,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static com.thegetaway.firebaseauthentication.BaseAuthentication.NativeFirebaseResultCode;
-
 public class EmailPasswordAuthentication
 {
+    private static native void NativeEmailPasswordResult(int Result);
+
     private FirebaseAuth FirebaseAuthInstance;
 
     public EmailPasswordAuthentication()
@@ -30,12 +30,12 @@ public class EmailPasswordAuthentication
                 if (Task.isSuccessful())
                 {
                     // Sign in success
-                    NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                    NativeEmailPasswordResult(CommonStatusCodes.SUCCESS);
                 }
                 else
                 {
                     // Sign in failed
-                    NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                    NativeEmailPasswordResult(CommonStatusCodes.ERROR);
                 }
             }
         });
@@ -51,12 +51,12 @@ public class EmailPasswordAuthentication
                 if (Task.isSuccessful())
                 {
                     // Sign in success
-                    NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                    NativeEmailPasswordResult(CommonStatusCodes.SUCCESS);
                 }
                 else
                 {
                     // Sign in failed
-                    NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                    NativeEmailPasswordResult(CommonStatusCodes.ERROR);
                 }
             }
         });
@@ -74,12 +74,12 @@ public class EmailPasswordAuthentication
                 if (Task.isSuccessful())
                 {
                     // Sign in success
-                    NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                    NativeEmailPasswordResult(CommonStatusCodes.SUCCESS);
                 }
                 else
                 {
                     // Sign in failed
-                    NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                    NativeEmailPasswordResult(CommonStatusCodes.ERROR);
                 }
             }
         });

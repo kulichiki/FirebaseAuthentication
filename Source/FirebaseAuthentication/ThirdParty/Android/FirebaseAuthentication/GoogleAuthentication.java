@@ -17,11 +17,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import static com.thegetaway.firebaseauthentication.BaseAuthentication.NativeFirebaseResult;
-import static com.thegetaway.firebaseauthentication.BaseAuthentication.NativeFirebaseResultCode;
-
 public class GoogleAuthentication
 {
+    private static native void NativeGoogleResult(int Result);
+
     private static final int GOOGLE_SIGNIN_RC = 9001;
 
     private GoogleSignInClient SignInClient;
@@ -61,7 +60,7 @@ public class GoogleAuthentication
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeFirebaseResult();
+                NativeGoogleResult();
             }
         });
     }
@@ -77,7 +76,7 @@ public class GoogleAuthentication
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeFirebaseResult();
+                NativeGoogleResult();
             }
         });
     }
@@ -95,13 +94,13 @@ public class GoogleAuthentication
                 if (Task.isSuccessful())
                 {
                     // Sign in success
-                    NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                    NativeGoogleResult(CommonStatusCodes.SUCCESS);
                 }
                 else
                 {
                     // Sign in failed
                     // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
-                    NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                    NativeGoogleResult(CommonStatusCodes.ERROR);
                 }
             }
         });
@@ -120,7 +119,7 @@ public class GoogleAuthentication
 			}
 			catch (ApiException e)
 			{
-				NativeFirebaseResultCode(e.getStatusCode());
+				NativeGoogleResult(e.getStatusCode());
 			}
 		}
 	}

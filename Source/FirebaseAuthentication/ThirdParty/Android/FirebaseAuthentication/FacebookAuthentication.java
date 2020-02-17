@@ -20,10 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 
-import static com.thegetaway.firebaseauthentication.BaseAuthentication.NativeFirebaseResultCode;
-
 public class FacebookAuthentication
 {
+    private static native void NativeFacebookResult(int Result);
+
     private static final int FACEBOOK_SIGNIN_RC = 64206;
 
     private CallbackManager FacebookCallbackManager;
@@ -50,14 +50,14 @@ public class FacebookAuthentication
 			public void onCancel()
 			{
 				// Sign In Failed
-				NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+				NativeFacebookResult(CommonStatusCodes.ERROR);
 			}
 		
 			@Override
 			public void onError(FacebookException error)
 			{
 				// Sign In Failed
-				NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+				NativeFacebookResult(CommonStatusCodes.ERROR);
 			}
 		};
     }
@@ -88,12 +88,12 @@ public class FacebookAuthentication
                 if (Task.isSuccessful())
                 {
                     // Sign in success
-                    NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                    NativeFacebookResult(CommonStatusCodes.SUCCESS);
                 }
                 else
                 {
                     // Sign in failed
-                    NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                    NativeFacebookResult(CommonStatusCodes.ERROR);
                 }
             }
         });

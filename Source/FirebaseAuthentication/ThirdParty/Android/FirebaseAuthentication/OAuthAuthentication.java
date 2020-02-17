@@ -10,10 +10,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.OAuthProvider;
 
-import static com.thegetaway.firebaseauthentication.BaseAuthentication.NativeFirebaseResultCode;
-
 public class OAuthAuthentication
 {
+    private static native void NativeOAuthResult(int Result);
+
     private FirebaseAuth FirebaseAuthInstance;
     private Activity MainActivity;
 
@@ -32,7 +32,7 @@ public class OAuthAuthentication
             public void onSuccess(AuthResult Result)
             {
                 // Sign in success
-                NativeFirebaseResultCode(CommonStatusCodes.SUCCESS);
+                NativeOAuthResult(CommonStatusCodes.SUCCESS);
             }
         })
         .addOnFailureListener(new OnFailureListener()
@@ -41,7 +41,7 @@ public class OAuthAuthentication
             public void onFailure(@NonNull Exception e)
             {
                 // Sign in failed
-                NativeFirebaseResultCode(CommonStatusCodes.ERROR);
+                NativeOAuthResult(CommonStatusCodes.ERROR);
             }
         });
     }
