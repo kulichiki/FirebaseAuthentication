@@ -24,6 +24,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|FacebookAuthentication")
 	static void FacebookSignOut();
 
+	static void CallVoidMethod(const char* Name, const char* Signature, ...);
+
 private:
 	static void FirebaseSignOut();
 };

@@ -60,7 +60,7 @@ public class GoogleAuthentication
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeGoogleResult();
+                NativeGoogleResult(CommonStatusCodes.SUCCESS);
             }
         });
     }
@@ -76,7 +76,7 @@ public class GoogleAuthentication
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeGoogleResult();
+                NativeGoogleResult(CommonStatusCodes.SUCCESS);
             }
         });
     }

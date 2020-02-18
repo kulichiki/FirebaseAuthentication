@@ -1,5 +1,5 @@
 #include "FacebookAuthentication.h"
-#include "FirebaseAuthentication.h"
+#include "AuthenticationLibrary.h"
 
 #if PLATFORM_ANDROID
 	#include "Android/AndroidJNI.h"
@@ -9,12 +9,7 @@
 UFacebookAuthentication* UFacebookAuthentication::FacebookSignIn()
 {
 #if PLATFORM_ANDROID
-	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
-	{
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_FacebookSignIn", "()V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID);
-	}
+	UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_FacebookSignIn", "()V");
 #endif
-
 	return NewObject<UFacebookAuthentication>();
 }

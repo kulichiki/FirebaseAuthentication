@@ -1,5 +1,5 @@
 #include "EmailPasswordAuthentication.h"
-#include "FirebaseAuthentication.h"
+#include "AuthenticationLibrary.h"
 
 #if PLATFORM_ANDROID
 	#include "Android/AndroidJNI.h"
@@ -11,17 +11,18 @@ UEmailPasswordAuthentication* UEmailPasswordAuthentication::EmailPasswordSignIn(
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
+		// Init Java strings
 		jstring JEmail = Env->NewStringUTF(TCHAR_TO_UTF8(*Email));
 		jstring JPassword = Env->NewStringUTF(TCHAR_TO_UTF8(*Password));
 
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_EmailPasswordSignIn", "(Ljava/lang/String;Ljava/lang/String;)V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JEmail, JPassword);
+		// Call Java method
+		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_EmailPasswordSignIn", "(Ljava/lang/String;Ljava/lang/String;)V", JEmail, JPassword);
 
+		// Remove Java references
 		Env->DeleteLocalRef(JEmail);
 		Env->DeleteLocalRef(JPassword);
 	}
 #endif
-
 	return NewObject<UEmailPasswordAuthentication>();
 }
 
@@ -30,29 +31,25 @@ UEmailPasswordAuthentication* UEmailPasswordAuthentication::CreateAccount(FStrin
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
+		// Init Java strings
 		jstring JEmail = Env->NewStringUTF(TCHAR_TO_UTF8(*Email));
 		jstring JPassword = Env->NewStringUTF(TCHAR_TO_UTF8(*Password));
 
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_CreateAccount", "(Ljava/lang/String;Ljava/lang/String;)V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JEmail, JPassword);
+		// Call Java method
+		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_CreateAccount", "(Ljava/lang/String;Ljava/lang/String;)V", JEmail, JPassword);
 
+		// Remove Java references
 		Env->DeleteLocalRef(JEmail);
 		Env->DeleteLocalRef(JPassword);
 	}
 #endif
-
 	return NewObject<UEmailPasswordAuthentication>();
 }
 
 UEmailPasswordAuthentication* UEmailPasswordAuthentication::SendEmailVerification()
 {
 #if PLATFORM_ANDROID
-	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
-	{
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_SendEmailVerification", "()V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID);
-	}
+	UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_SendEmailVerification", "()V");
 #endif
-
 	return NewObject<UEmailPasswordAuthentication>();
 }

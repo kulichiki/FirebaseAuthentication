@@ -104,6 +104,7 @@
       import com.thegetaway.firebaseauthentication.GoogleAuthentication;
       import com.thegetaway.firebaseauthentication.OAuthAuthentication;
       import com.thegetaway.firebaseauthentication.PhoneAuthentication;
+      import com.thegetaway.firebaseauthentication.BaseAuthentication;
     </insert>
   </gameActivityImportAdditions>
 
@@ -153,6 +154,9 @@
 
       // OAuth Authentication methods
       private void AndroidThunkJava_OAuthSignIn(String ProviderID) { OAuth.OAuthSignIn(ProviderID); }
+
+      // Firebase methods
+      private void AndroidThunkJava_FirebaseSignOut() { BaseAuthentication.FirebaseAccountSignOut(); }
     </insert>
   </gameActivityClassAdditions>
   

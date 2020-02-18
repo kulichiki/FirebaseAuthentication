@@ -145,7 +145,7 @@ public class PhoneAuthentication
                     if (Task.getException() instanceof FirebaseAuthInvalidCredentialsException)
                     {
                         // The verification code entered was invalid
-                        NativeFirebaseResultCode(INVALID_CODE);
+                        NativePhoneResult(INVALID_CODE);
                     }
                     else
                     {

@@ -1,5 +1,5 @@
 #include "OAuthAuthentication.h"
-#include "FirebaseAuthentication.h"
+#include "AuthenticationLibrary.h"
 
 #if PLATFORM_ANDROID
 	#include "Android/AndroidJNI.h"
@@ -11,6 +11,7 @@ UOAuthAuthentication* UOAuthAuthentication::OAuthSignIn(EOAuthProvider OAuthProv
 #if PLATFORM_ANDROID	
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
+		// Init Java string
 		jstring JProviderURL;
 		switch (OAuthProvider)
 		{
@@ -30,13 +31,13 @@ UOAuthAuthentication* UOAuthAuthentication::OAuthSignIn(EOAuthProvider OAuthProv
 			JProviderURL = Env->NewStringUTF("twitter.com");
 			break;
 		}
+		
+		// Call Java method
+		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_OAuthSignIn", "(Ljava/lang/String;)V", JProviderURL);
 
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_OAuthSignIn", "(Ljava/lang/String;)V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JProviderURL);
-
+		// Remove Java reference
 		Env->DeleteLocalRef(JProviderURL);
 	}
 #endif
-
 	return NewObject<UOAuthAuthentication>();
 }

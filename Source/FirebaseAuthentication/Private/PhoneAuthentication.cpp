@@ -1,5 +1,5 @@
 #include "PhoneAuthentication.h"
-#include "FirebaseAuthentication.h"
+#include "AuthenticationLibrary.h"
 
 #if PLATFORM_ANDROID
 	#include "Android/AndroidJNI.h"
@@ -11,15 +11,16 @@ UPhoneAuthentication* UPhoneAuthentication::StartPhoneNumberVerification(FString
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
+		// Init Java string
 		jstring JPhoneNumber = Env->NewStringUTF(TCHAR_TO_UTF8(*PhoneNumber));
 
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_StartPhoneNumberVerification", "(Ljava/lang/String;I)V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JPhoneNumber, Timeout);
+		// Call Java method
+		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_StartPhoneNumberVerification", "(Ljava/lang/String;I)V", JPhoneNumber, Timeout);
 
+		// Remove Java reference
 		Env->DeleteLocalRef(JPhoneNumber);
 	}
 #endif
-
 	return NewObject<UPhoneAuthentication>();
 }
 
@@ -28,15 +29,16 @@ UPhoneAuthentication* UPhoneAuthentication::ResendVerificationCode(FString Phone
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
+		// Init Java string
 		jstring JPhoneNumber = Env->NewStringUTF(TCHAR_TO_UTF8(*PhoneNumber));
 
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_ResendVerificationCode", "(Ljava/lang/String;I)V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JPhoneNumber, Timeout);
+		// Call Java method
+		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_ResendVerificationCode", "(Ljava/lang/String;I)V", JPhoneNumber, Timeout);
 
+		// Remove Java reference
 		Env->DeleteLocalRef(JPhoneNumber);
 	}
 #endif
-
 	return NewObject<UPhoneAuthentication>();
 }
 
@@ -45,14 +47,15 @@ UPhoneAuthentication* UPhoneAuthentication::VerifyPhoneNumberWithCode(FString Co
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
+		// Init Java string
 		jstring JCode = Env->NewStringUTF(TCHAR_TO_UTF8(*Code));
 
-		static jmethodID JMethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_VerifyPhoneNumberWithCode", "(Ljava/lang/String;)V", false);
-		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethodID, JCode);
+		// Call Java method
+		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_VerifyPhoneNumberWithCode", "(Ljava/lang/String;)V", JCode);
 
+		// Remove Java reference
 		Env->DeleteLocalRef(JCode);
 	}
 #endif
-
 	return NewObject<UPhoneAuthentication>();
 }
