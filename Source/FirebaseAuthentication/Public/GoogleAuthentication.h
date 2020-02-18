@@ -3,7 +3,14 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "GoogleAuthentication.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGoogleAuthenticationResult, int, Result);
+UENUM(BlueprintType)
+enum class EGoogleAuthenticationResult : uint8
+{
+	Success,
+	Failed
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGoogleAuthenticationResult, EGoogleAuthenticationResult, Result);
 
 UCLASS()
 class FIREBASEAUTHENTICATION_API UGoogleAuthentication : public UBlueprintAsyncActionBase

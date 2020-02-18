@@ -33,3 +33,9 @@ UAnonymousAuthentication* UAnonymousAuthentication::AnonymousLinkAccount(FString
 #endif
 	return NewObject<UAnonymousAuthentication>();
 }
+
+#if PLATFORM_ANDROID
+JNI_METHOD void Java_com_thegetaway_firebaseauthentication_AnonymousAuthentication_NativeAnonymousResult(JNIEnv* jenv, jobject thiz, jint Result)
+{
+}
+#endif

@@ -3,7 +3,14 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "EmailPasswordAuthentication.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEmailPasswordAuthenticationResult, int, Result);
+UENUM(BlueprintType)
+enum class EEmailPasswordAuthenticationResult : uint8
+{
+	Success,
+	Failed
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEmailPasswordAuthenticationResult, EEmailPasswordAuthenticationResult, Result);
 
 UCLASS()
 class FIREBASEAUTHENTICATION_API UEmailPasswordAuthentication : public UBlueprintAsyncActionBase

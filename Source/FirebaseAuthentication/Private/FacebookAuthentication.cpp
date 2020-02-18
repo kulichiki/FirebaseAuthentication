@@ -13,3 +13,9 @@ UFacebookAuthentication* UFacebookAuthentication::FacebookSignIn()
 #endif
 	return NewObject<UFacebookAuthentication>();
 }
+
+#if PLATFORM_ANDROID
+JNI_METHOD void Java_com_thegetaway_firebaseauthentication_FacebookAuthentication_NativeFacebookResult(JNIEnv* jenv, jobject thiz, jint Result)
+{
+}
+#endif

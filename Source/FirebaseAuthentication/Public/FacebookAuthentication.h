@@ -3,7 +3,14 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "FacebookAuthentication.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFacebookAuthenticationResult, int, Result);
+UENUM(BlueprintType)
+enum class EFacebookAuthenticationResult : uint8
+{
+	Success,
+	Failed
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFacebookAuthenticationResult, EFacebookAuthenticationResult, Result);
 
 UCLASS()
 class FIREBASEAUTHENTICATION_API UFacebookAuthentication : public UBlueprintAsyncActionBase

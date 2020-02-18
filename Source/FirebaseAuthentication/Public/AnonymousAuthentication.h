@@ -3,7 +3,14 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "AnonymousAuthentication.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAnonymousAuthenticationResult, int, Result);
+UENUM(BlueprintType)
+enum class EAnonymousAuthenticationResult : uint8
+{
+	Success,
+	Failed
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAnonymousAuthenticationResult, EAnonymousAuthenticationResult, Result);
 
 UCLASS()
 class FIREBASEAUTHENTICATION_API UAnonymousAuthentication : public UBlueprintAsyncActionBase

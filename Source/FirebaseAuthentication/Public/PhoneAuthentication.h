@@ -3,7 +3,14 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "PhoneAuthentication.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPhoneAuthenticationResult, int, Result);
+UENUM(BlueprintType)
+enum class EPhoneAuthenticationResult : uint8
+{
+	Success,
+	Failed
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPhoneAuthenticationResult, EPhoneAuthenticationResult, Result);
 
 UCLASS()
 class FIREBASEAUTHENTICATION_API UPhoneAuthentication : public UBlueprintAsyncActionBase

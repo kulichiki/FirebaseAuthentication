@@ -4,6 +4,13 @@
 #include "OAuthAuthentication.generated.h"
 
 UENUM(BlueprintType)
+enum class EOAuthAuthenticationResult : uint8
+{
+	Success,
+	Failed
+};
+
+UENUM(BlueprintType)
 enum class EOAuthProvider : uint8
 {
 	Apple,
@@ -13,7 +20,7 @@ enum class EOAuthProvider : uint8
 	Twitter	
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOAuthAuthenticationResult, int, Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOAuthAuthenticationResult, EOAuthAuthenticationResult, Result);
 
 UCLASS()
 class FIREBASEAUTHENTICATION_API UOAuthAuthentication : public UBlueprintAsyncActionBase

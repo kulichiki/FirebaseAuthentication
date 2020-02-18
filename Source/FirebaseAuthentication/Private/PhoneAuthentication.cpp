@@ -59,3 +59,9 @@ UPhoneAuthentication* UPhoneAuthentication::VerifyPhoneNumberWithCode(FString Co
 #endif
 	return NewObject<UPhoneAuthentication>();
 }
+
+#if PLATFORM_ANDROID
+JNI_METHOD void Java_com_thegetaway_firebaseauthentication_PhoneAuthentication_NativePhoneResult(JNIEnv* jenv, jobject thiz, jint Result)
+{
+}
+#endif

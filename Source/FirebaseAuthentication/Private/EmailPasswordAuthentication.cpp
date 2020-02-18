@@ -53,3 +53,9 @@ UEmailPasswordAuthentication* UEmailPasswordAuthentication::SendEmailVerificatio
 #endif
 	return NewObject<UEmailPasswordAuthentication>();
 }
+
+#if PLATFORM_ANDROID
+JNI_METHOD void Java_com_thegetaway_firebaseauthentication_EmailPasswordAuthentication_NativeEmailPasswordResult(JNIEnv* jenv, jobject thiz, jint Result)
+{
+}
+#endif

@@ -29,3 +29,9 @@ UGoogleAuthentication* UGoogleAuthentication::GoogleRevokeAccess()
 #endif
 	return NewObject<UGoogleAuthentication>();
 }
+
+#if PLATFORM_ANDROID
+JNI_METHOD void Java_com_thegetaway_firebaseauthentication_GoogleAuthentication_NativeGoogleResult(JNIEnv* jenv, jobject thiz, jint Result)
+{
+}
+#endif
