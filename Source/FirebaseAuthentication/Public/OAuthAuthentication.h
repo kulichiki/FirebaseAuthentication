@@ -33,4 +33,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|OAuthAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UOAuthAuthentication* OAuthSignIn(EOAuthProvider OAuthProvider);
+
+	void Activate() override;
 };

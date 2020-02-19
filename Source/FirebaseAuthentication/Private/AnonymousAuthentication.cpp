@@ -1,5 +1,6 @@
 #include "AnonymousAuthentication.h"
 #include "AuthenticationLibrary.h"
+#include "FirebaseAuthentication.h"
 
 #if PLATFORM_ANDROID
 	#include "Android/AndroidJNI.h"
@@ -34,8 +35,18 @@ UAnonymousAuthentication* UAnonymousAuthentication::AnonymousLinkAccount(FString
 	return NewObject<UAnonymousAuthentication>();
 }
 
+void UAnonymousAuthentication::Activate()
+{
+#if PLATFORM_ANDROID
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BindAnonymousDelegate(this);
+#endif
+}
+
 #if PLATFORM_ANDROID
 JNI_METHOD void Java_com_thegetaway_firebaseauthentication_AnonymousAuthentication_NativeAnonymousResult(JNIEnv* jenv, jobject thiz, jint Result)
 {
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BroadcastAnonymousDelegate(EAnonymousAuthenticationResult(Result));
 }
 #endif

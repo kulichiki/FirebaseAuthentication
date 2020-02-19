@@ -29,4 +29,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|GoogleAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UGoogleAuthentication* GoogleRevokeAccess();
+
+	void Activate() override;
 };

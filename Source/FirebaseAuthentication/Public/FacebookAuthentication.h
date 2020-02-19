@@ -23,4 +23,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|FacebookAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UFacebookAuthentication* FacebookSignIn();
+
+	void Activate() override;
 };

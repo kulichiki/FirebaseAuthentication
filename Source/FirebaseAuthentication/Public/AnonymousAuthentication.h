@@ -26,4 +26,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|AnonymousAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UAnonymousAuthentication* AnonymousLinkAccount(FString Email, FString Password);
+
+	void Activate() override;
 };

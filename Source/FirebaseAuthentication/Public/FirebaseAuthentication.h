@@ -15,14 +15,38 @@ public:
 	void StartupModule() override;
 	void ShutdownModule() override;
 
-private:
+	// Email/Password
+	void BindEmailPasswordDelegate(UEmailPasswordAuthentication* BindTo);
+	void BroadcastEmailPasswordDelegate(EEmailPasswordAuthenticationResult Result);
+
+	// Anonymous
+	void BindAnonymousDelegate(UAnonymousAuthentication* BindTo);
+	void BroadcastAnonymousDelegate(EAnonymousAuthenticationResult Result);
+
+	// Facebook
+	void BindFacebookDelegate(UFacebookAuthentication* BindTo);
+	void BroadcastFacebookDelegate(EFacebookAuthenticationResult Result);
+
+	// Google
+	void BindGoogleDelegate(UGoogleAuthentication* BindTo);
+	void BroadcastGoogleDelegate(EGoogleAuthenticationResult Result);
+
+	// OAuth
+	void BindOAuthDelegate(UOAuthAuthentication* BindTo);
+	void BroadcastOAuthDelegate(EOAuthAuthenticationResult Result);
+
+	// Phone
+	void BindPhoneDelegate(UPhoneAuthentication* BindTo);
+	void BroadcastPhoneDelegate(EPhoneAuthenticationResult Result);
+
 	static FFirebaseAuthenticationModule* GetModule();
 
+private:
 	// Delegates
-	FEmailPasswordAuthenticationResult EmailPasswordResult;
-	FAnonymousAuthenticationResult AnonymousResult;
-	FFacebookAuthenticationResult FacebookResult;
-	FGoogleAuthenticationResult GoogleResult;
-	FOAuthAuthenticationResult OAuthResult;
-	FPhoneAuthenticationResult PhoneResult;
+	FEmailPasswordAuthenticationResult* EmailPasswordDelegate;
+	FAnonymousAuthenticationResult* AnonymousDelegate;
+	FFacebookAuthenticationResult* FacebookDelegate;
+	FGoogleAuthenticationResult* GoogleDelegate;
+	FOAuthAuthenticationResult* OAuthDelegate;
+	FPhoneAuthenticationResult* PhoneDelegate;
 };

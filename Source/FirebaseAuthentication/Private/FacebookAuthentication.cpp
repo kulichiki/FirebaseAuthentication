@@ -14,8 +14,18 @@ UFacebookAuthentication* UFacebookAuthentication::FacebookSignIn()
 	return NewObject<UFacebookAuthentication>();
 }
 
+void UFacebookAuthentication::Activate()
+{
+#if PLATFORM_ANDROID
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BindFacebookDelegate(this);
+#endif
+}
+
 #if PLATFORM_ANDROID
 JNI_METHOD void Java_com_thegetaway_firebaseauthentication_FacebookAuthentication_NativeFacebookResult(JNIEnv* jenv, jobject thiz, jint Result)
 {
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BroadcastFacebookDelegate(EFacebookAuthenticationResult(Result));
 }
 #endif

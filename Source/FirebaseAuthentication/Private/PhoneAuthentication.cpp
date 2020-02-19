@@ -60,8 +60,18 @@ UPhoneAuthentication* UPhoneAuthentication::VerifyPhoneNumberWithCode(FString Co
 	return NewObject<UPhoneAuthentication>();
 }
 
+void UPhoneAuthentication::Activate()
+{
+#if PLATFORM_ANDROID
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BindPhoneDelegate(this);
+#endif
+}
+
 #if PLATFORM_ANDROID
 JNI_METHOD void Java_com_thegetaway_firebaseauthentication_PhoneAuthentication_NativePhoneResult(JNIEnv* jenv, jobject thiz, jint Result)
 {
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BroadcastPhoneDelegate(EPhoneAuthenticationResult(Result));
 }
 #endif

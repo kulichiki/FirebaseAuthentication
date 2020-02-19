@@ -29,4 +29,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|EmailPasswordAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UEmailPasswordAuthentication* SendEmailVerification();
+
+	void Activate() override;
 };

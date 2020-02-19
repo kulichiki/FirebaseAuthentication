@@ -54,8 +54,18 @@ UEmailPasswordAuthentication* UEmailPasswordAuthentication::SendEmailVerificatio
 	return NewObject<UEmailPasswordAuthentication>();
 }
 
+void UEmailPasswordAuthentication::Activate()
+{
+#if PLATFORM_ANDROID
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BindEmailPasswordDelegate(this);
+#endif
+}
+
 #if PLATFORM_ANDROID
 JNI_METHOD void Java_com_thegetaway_firebaseauthentication_EmailPasswordAuthentication_NativeEmailPasswordResult(JNIEnv* jenv, jobject thiz, jint Result)
 {
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BroadcastEmailPasswordDelegate(EEmailPasswordAuthenticationResult(Result));
 }
 #endif

@@ -30,8 +30,18 @@ UGoogleAuthentication* UGoogleAuthentication::GoogleRevokeAccess()
 	return NewObject<UGoogleAuthentication>();
 }
 
+void UGoogleAuthentication::Activate()
+{
+#if PLATFORM_ANDROID
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BindGoogleDelegate(this);
+#endif
+}
+
 #if PLATFORM_ANDROID
 JNI_METHOD void Java_com_thegetaway_firebaseauthentication_GoogleAuthentication_NativeGoogleResult(JNIEnv* jenv, jobject thiz, jint Result)
 {
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+		Module->BroadcastGoogleDelegate(EGoogleAuthenticationResult(Result));
 }
 #endif

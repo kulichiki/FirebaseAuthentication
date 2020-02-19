@@ -29,4 +29,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|PhoneAuthentication", meta = (BlueprintInternalUseOnly = "true"))
 	static UPhoneAuthentication* VerifyPhoneNumberWithCode(FString Code);
+
+	void Activate() override;
 };
