@@ -6,8 +6,8 @@
 UENUM(BlueprintType)
 enum class EOAuthAuthenticationResult : uint8
 {
-	Success,
-	Failed
+	SUCCESS			= 0 UMETA(DisplayName = "Success"),
+	UNKNOWN_ERROR	= 1 UMETA(DisplayName = "Unknown Error")
 };
 
 UENUM(BlueprintType)

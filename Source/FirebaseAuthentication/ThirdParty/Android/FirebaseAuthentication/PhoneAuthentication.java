@@ -19,18 +19,21 @@ import java.util.concurrent.TimeUnit;
 public class PhoneAuthentication
 {
     private static native void NativePhoneResult(int Result);
-
-    private static final int VERIFY_FAILED = 23;
-    private static final int INVALID_CODE = 24;
-    private static final int INVALID_PHONE_NUMBER = 25;
-    private static final int SMS_QUOTA = 26;
-    private static final int RESEND_TOKEN_NOT_VALID = 27;
-
     private String VerificationID;
     private PhoneAuthProvider.ForceResendingToken ResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks AuthCallbacks;
     private FirebaseAuth FirebaseAuthInstance;
     private Activity MainActivity;
+
+    private class ResultCodes
+    {
+        static final int SUCCESS                = 0;
+        static final int INVALID_PHONE_NUMBER   = 1;
+        static final int SMS_QUOTA              = 2;
+        static final int RESEND_TOKEN_NOT_VALID = 3;
+        static final int INVALID_CODE           = 4;
+        static final int UNKNOWN_ERROR          = 5;
+    }
 
     public PhoneAuthentication(Activity MainActivity)
     {
@@ -50,7 +53,7 @@ public class PhoneAuthentication
 				//     detect the incoming verification SMS and perform verification without
 				//     user action.
 				SignInWithPhoneAuthCredential(Credential);
-				NativePhoneResult(CommonStatusCodes.SUCCESS);
+				NativePhoneResult(ResultCodes.SUCCESS);
 			}
 		
 			@Override
@@ -59,15 +62,9 @@ public class PhoneAuthentication
 				// This callback is invoked in an invalid request for verification is made,
 				// for instance if the the phone number format is not valid.
 				if (e instanceof FirebaseAuthInvalidCredentialsException)
-				{
-					// Invalid phone number
-					NativePhoneResult(INVALID_PHONE_NUMBER);
-				}
+					NativePhoneResult(ResultCodes.INVALID_PHONE_NUMBER);
 				else if (e instanceof FirebaseTooManyRequestsException)
-				{
-					// The SMS quota for the project has been exceeded
-					NativePhoneResult(SMS_QUOTA);
-				}
+					NativePhoneResult(ResultCodes.SMS_QUOTA);
 			}
 		
 			@Override
@@ -80,7 +77,7 @@ public class PhoneAuthentication
 				// Save verification ID and resending token so we can use them later
 				VerificationID = AuthVerificationID;
 				ResendToken = Token;
-				NativePhoneResult(CommonStatusCodes.SUCCESS);
+				NativePhoneResult(ResultCodes.SUCCESS);
 			}
 		};
     }
@@ -121,9 +118,7 @@ public class PhoneAuthentication
             );
         }
         else
-        {
-            NativePhoneResult(RESEND_TOKEN_NOT_VALID);
-        }
+            NativePhoneResult(ResultCodes.RESEND_TOKEN_NOT_VALID);
     }
 
     // Internal
@@ -135,22 +130,13 @@ public class PhoneAuthentication
             public void onComplete(@NonNull Task<AuthResult> Task)
             {
                 if (Task.isSuccessful())
-                {
-                    // Sign in success
-                    NativePhoneResult(CommonStatusCodes.SUCCESS);
-                }
+                    NativePhoneResult(ResultCodes.SUCCESS);
                 else
                 {
-                    // Sign in failed
                     if (Task.getException() instanceof FirebaseAuthInvalidCredentialsException)
-                    {
-                        // The verification code entered was invalid
-                        NativePhoneResult(INVALID_CODE);
-                    }
+                        NativePhoneResult(ResultCodes.INVALID_CODE);
                     else
-                    {
-                        NativePhoneResult(CommonStatusCodes.ERROR);
-                    }
+                        NativePhoneResult(ResultCodes.UNKNOWN_ERROR);
                 }
             }
         });

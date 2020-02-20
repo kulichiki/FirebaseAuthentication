@@ -20,12 +20,17 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class GoogleAuthentication
 {
     private static native void NativeGoogleResult(int Result);
-
-    private static final int GOOGLE_SIGNIN_RC = 9001;
-
     private GoogleSignInClient SignInClient;
     private FirebaseAuth FirebaseAuthInstance;
     private Activity MainActivity;
+
+    private static final int GOOGLE_SIGNIN_RC = 9001;
+
+    private class ResultCodes
+    {
+        static final int SUCCESS          = 0;
+        static final int UNKNOWN_ERROR    = 1;
+    }
 
     public GoogleAuthentication(Activity MainActivity)
     {
@@ -53,36 +58,30 @@ public class GoogleAuthentication
     public void GoogleSignOut()
     {
         FirebaseAuthInstance.signOut();
-
-        // Google sign out
         SignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeGoogleResult(CommonStatusCodes.SUCCESS);
+                NativeGoogleResult(ResultCodes.SUCCESS);
             }
         });
     }
 
     public void GoogleRevokeAccess()
     {
-        // Firebase sign out
         FirebaseAuthInstance.signOut();
-
-        // Google revoke access
         SignInClient.revokeAccess().addOnCompleteListener(new OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeGoogleResult(CommonStatusCodes.SUCCESS);
+                NativeGoogleResult(ResultCodes.SUCCESS);
             }
         });
     }
 
     // Internal Function
-    // ВОЗВРАЩАТЬ РЕЗУЛЬТАТ КОД
     private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
     {
         AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
@@ -92,16 +91,9 @@ public class GoogleAuthentication
             public void onComplete(@NonNull Task<AuthResult> Task)
             {
                 if (Task.isSuccessful())
-                {
-                    // Sign in success
-                    NativeGoogleResult(CommonStatusCodes.SUCCESS);
-                }
+                    NativeGoogleResult(ResultCodes.SUCCESS);
                 else
-                {
-                    // Sign in failed
-                    // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
-                    NativeGoogleResult(CommonStatusCodes.ERROR);
-                }
+                    NativeGoogleResult(ResultCodes.UNKNOWN_ERROR);
             }
         });
     }
@@ -119,7 +111,7 @@ public class GoogleAuthentication
 			}
 			catch (ApiException e)
 			{
-				NativeGoogleResult(e.getStatusCode());
+				NativeGoogleResult(ResultCodes.UNKNOWN_ERROR);
 			}
 		}
 	}

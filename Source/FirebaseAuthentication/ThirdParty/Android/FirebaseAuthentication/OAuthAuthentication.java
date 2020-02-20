@@ -13,9 +13,14 @@ import com.google.firebase.auth.OAuthProvider;
 public class OAuthAuthentication
 {
     private static native void NativeOAuthResult(int Result);
-
     private FirebaseAuth FirebaseAuthInstance;
     private Activity MainActivity;
+
+    private class ResultCodes
+    {
+        static final int SUCCESS          = 0;
+        static final int UNKNOWN_ERROR    = 1;
+    }
 
     public OAuthAuthentication(Activity MainActivity)
     {
@@ -31,8 +36,7 @@ public class OAuthAuthentication
             @Override
             public void onSuccess(AuthResult Result)
             {
-                // Sign in success
-                NativeOAuthResult(CommonStatusCodes.SUCCESS);
+                NativeOAuthResult(ResultCodes.SUCCESS);
             }
         })
         .addOnFailureListener(new OnFailureListener()
@@ -40,8 +44,7 @@ public class OAuthAuthentication
             @Override
             public void onFailure(@NonNull Exception e)
             {
-                // Sign in failed
-                NativeOAuthResult(CommonStatusCodes.ERROR);
+                NativeOAuthResult(ResultCodes.UNKNOWN_ERROR);
             }
         });
     }

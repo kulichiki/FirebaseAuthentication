@@ -6,8 +6,8 @@
 UENUM(BlueprintType)
 enum class EGoogleAuthenticationResult : uint8
 {
-	Success,
-	Failed
+	SUCCESS			= 0 UMETA(DisplayName = "Success"),
+	UNKNOWN_ERROR	= 1 UMETA(DisplayName = "Unknown Error")
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGoogleAuthenticationResult, EGoogleAuthenticationResult, Result);

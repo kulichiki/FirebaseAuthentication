@@ -12,8 +12,13 @@ import com.google.firebase.auth.FirebaseUser;
 public class EmailPasswordAuthentication
 {
     private static native void NativeEmailPasswordResult(int Result);
-
     private FirebaseAuth FirebaseAuthInstance;
+
+    private class ResultCodes
+    {
+        static final int SUCCESS          = 0;
+        static final int UNKNOWN_ERROR    = 1;
+    }
 
     public EmailPasswordAuthentication()
     {
@@ -28,15 +33,9 @@ public class EmailPasswordAuthentication
             public void onComplete(@NonNull Task<AuthResult> Task)
             {
                 if (Task.isSuccessful())
-                {
-                    // Sign in success
-                    NativeEmailPasswordResult(CommonStatusCodes.SUCCESS);
-                }
+                    NativeEmailPasswordResult(ResultCodes.SUCCESS);
                 else
-                {
-                    // Sign in failed
-                    NativeEmailPasswordResult(CommonStatusCodes.ERROR);
-                }
+                    NativeEmailPasswordResult(ResultCodes.UNKNOWN_ERROR);
             }
         });
     }
@@ -49,22 +48,15 @@ public class EmailPasswordAuthentication
             public void onComplete(@NonNull Task<AuthResult> Task)
             {
                 if (Task.isSuccessful())
-                {
-                    // Sign in success
-                    NativeEmailPasswordResult(CommonStatusCodes.SUCCESS);
-                }
+                    NativeEmailPasswordResult(ResultCodes.SUCCESS);
                 else
-                {
-                    // Sign in failed
-                    NativeEmailPasswordResult(CommonStatusCodes.ERROR);
-                }
+                    NativeEmailPasswordResult(ResultCodes.UNKNOWN_ERROR);
             }
         });
     }
 
     public void SendEmailVerification()
     {
-        // Send verification email
         final FirebaseUser User = FirebaseAuthInstance.getCurrentUser();
         User.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>()
         {
@@ -72,15 +64,9 @@ public class EmailPasswordAuthentication
             public void onComplete(@NonNull Task<Void> Task)
             {
                 if (Task.isSuccessful())
-                {
-                    // Sign in success
-                    NativeEmailPasswordResult(CommonStatusCodes.SUCCESS);
-                }
+                    NativeEmailPasswordResult(ResultCodes.SUCCESS);
                 else
-                {
-                    // Sign in failed
-                    NativeEmailPasswordResult(CommonStatusCodes.ERROR);
-                }
+                    NativeEmailPasswordResult(ResultCodes.UNKNOWN_ERROR);
             }
         });
     }

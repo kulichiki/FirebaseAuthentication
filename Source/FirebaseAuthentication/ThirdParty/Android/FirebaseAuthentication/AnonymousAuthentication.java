@@ -13,8 +13,13 @@ import com.google.firebase.auth.FirebaseAuth;
 public class AnonymousAuthentication
 {
     private static native void NativeAnonymousResult(int Result);
-
     private FirebaseAuth FirebaseAuthInstance;
+
+    private class ResultCodes
+    {
+        static final int SUCCESS          = 0;
+        static final int UNKNOWN_ERROR    = 1;
+    }
 
     public AnonymousAuthentication()
     {
@@ -29,16 +34,9 @@ public class AnonymousAuthentication
             public void onComplete(@NonNull Task<AuthResult> Task)
             {
                 if (Task.isSuccessful())
-                {
-                    // Sign in success
-                    NativeAnonymousResult(CommonStatusCodes.SUCCESS);
-                }
+                    NativeAnonymousResult(ResultCodes.SUCCESS);
                 else
-                {
-                    // Sign in failed
-                    // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
-                    NativeAnonymousResult(CommonStatusCodes.ERROR);
-                }
+                    NativeAnonymousResult(ResultCodes.UNKNOWN_ERROR);
             }
         });
     }
@@ -53,16 +51,9 @@ public class AnonymousAuthentication
             public void onComplete(@NonNull Task<AuthResult> Task)
             {
                 if (Task.isSuccessful())
-                {
-                    // Sign in success
-                    NativeAnonymousResult(CommonStatusCodes.SUCCESS);
-                }
+                    NativeAnonymousResult(ResultCodes.SUCCESS);
                 else
-                {
-                    // Sign in failed
-                    // УЖАСНЫЙ ОБРАБОТЧИК ОШИБОК, БЕРИ ИЗ НОМЕР ОШИБКИ ИЗ EXCEPTION'а
-                    NativeAnonymousResult(CommonStatusCodes.ERROR);
-                }
+                    NativeAnonymousResult(ResultCodes.UNKNOWN_ERROR);
             }
         });
     }

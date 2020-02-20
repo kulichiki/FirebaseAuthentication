@@ -23,13 +23,18 @@ import java.util.Arrays;
 public class FacebookAuthentication
 {
     private static native void NativeFacebookResult(int Result);
-
-    private static final int FACEBOOK_SIGNIN_RC = 64206;
-
     private CallbackManager FacebookCallbackManager;
     private FacebookCallback<LoginResult> LoginCallback;
     private FirebaseAuth FirebaseAuthInstance;
     private Activity MainActivity;
+
+    private static final int FACEBOOK_SIGNIN_RC = 64206;
+
+    private class ResultCodes
+    {
+        static final int SUCCESS          = 0;
+        static final int UNKNOWN_ERROR    = 1;
+    }
 
     public FacebookAuthentication(Activity MainActivity)
     {
@@ -49,15 +54,13 @@ public class FacebookAuthentication
 			@Override
 			public void onCancel()
 			{
-				// Sign In Failed
-				NativeFacebookResult(CommonStatusCodes.ERROR);
+				NativeFacebookResult(ResultCodes.UNKNOWN_ERROR);
 			}
 		
 			@Override
 			public void onError(FacebookException error)
 			{
-				// Sign In Failed
-				NativeFacebookResult(CommonStatusCodes.ERROR);
+				NativeFacebookResult(ResultCodes.UNKNOWN_ERROR);
 			}
 		};
     }
@@ -86,15 +89,9 @@ public class FacebookAuthentication
             public void onComplete(@NonNull Task<AuthResult> Task)
             {
                 if (Task.isSuccessful())
-                {
-                    // Sign in success
-                    NativeFacebookResult(CommonStatusCodes.SUCCESS);
-                }
+                    NativeFacebookResult(ResultCodes.SUCCESS);
                 else
-                {
-                    // Sign in failed
-                    NativeFacebookResult(CommonStatusCodes.ERROR);
-                }
+                    NativeFacebookResult(ResultCodes.UNKNOWN_ERROR);
             }
         });
     }
