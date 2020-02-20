@@ -17,7 +17,8 @@
       property="FacebookAppID" 
       default="" />
   </init>
-  
+
+  <!-- Add Facebook dependencies -->
   <androidManifestUpdates>
     <addElements tag="application">
       <meta-data
@@ -39,6 +40,23 @@
     <insertValue value="FACEBOOK_APP_ID=$S(FacebookAppID)" />
     <insertNewline/>
   </gradleProperties>
+  
+  <buildGradleAdditions>
+    <insert>
+      apply plugin: 'com.google.gms.google-services'
+      android 
+      {
+          buildTypes 
+          {
+              buildTypes.each
+              {
+                  it.signingConfig signingConfigs.release
+                  it.resValue "string", "FacebookAppID", FACEBOOK_APP_ID
+              }
+          }
+      }
+    </insert>
+  </buildGradleAdditions>
 
   <!-- Copy Library directory & google-services.json -->
   <gradleCopies>
@@ -67,24 +85,6 @@
     <replace find="play-services-nearby,11.8.0" with="play-services-nearby,16.0.0"/>
     <replace find="play-services-plus,11.8.0"   with="play-services-plus,16.0.0"/>
   </AARImports>
-
-  <buildGradleAdditions>
-    <insert>
-      apply plugin: 'com.google.gms.google-services'
-      
-      android 
-      {
-          buildTypes 
-          {
-              buildTypes.each
-              {
-                  it.signingConfig signingConfigs.release
-                  it.resValue "string", "FacebookAppID", FACEBOOK_APP_ID
-              }
-          }
-      }
-    </insert>
-  </buildGradleAdditions>
 
   <buildscriptGradleAdditions>
     <insert>
@@ -159,5 +159,12 @@
       private void AndroidThunkJava_FirebaseSignOut() { BaseAuthentication.FirebaseAccountSignOut(); }
     </insert>
   </gameActivityClassAdditions>
+
+  <gameActivityOnActivityResultAdditions>
+    <insert>
+      GoogleAuth.ActivityResult(requestCode, data);
+      FacebookAuth.ActivityResult(requestCode, resultCode, data);
+    </insert>
+  </gameActivityOnActivityResultAdditions>
   
 </root>

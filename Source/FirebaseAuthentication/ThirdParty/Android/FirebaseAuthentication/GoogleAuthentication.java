@@ -81,7 +81,7 @@ public class GoogleAuthentication
         });
     }
 
-    // Internal Function
+    // Internal function
     private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
     {
         AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
@@ -98,8 +98,8 @@ public class GoogleAuthentication
         });
     }
 	
-	// Handler
-	private void Handler(int RequestCode, Intent Data)
+	// ActivityResult
+	private void ActivityResult(int RequestCode, Intent Data)
 	{
 		if (RequestCode == GOOGLE_SIGNIN_RC)
 		{
