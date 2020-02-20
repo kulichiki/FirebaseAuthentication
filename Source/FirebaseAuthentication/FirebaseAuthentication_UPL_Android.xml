@@ -94,7 +94,7 @@
       }
     </insert>
   </buildscriptGradleAdditions>
-  
+
   <!-- GameActivity.java additions -->
   <gameActivityImportAdditions>
     <insert>
@@ -130,33 +130,33 @@
       private OAuthAuthentication OAuth;
 
       // Email/Password Authentication methods
-      private void AndroidThunkJava_EmailPasswordSignIn(String Email, String Password) { EmailPasswordAuth.EmailPasswordSignIn(Email, Password); }
-      private void AndroidThunkJava_CreateAccount(String Email, String Password) { EmailPasswordAuth.CreateAccount(Email, Password); }
-      private void AndroidThunkJava_SendEmailVerification() { EmailPasswordAuth.SendEmailVerification(); }
+      public void AndroidThunkJava_EmailPasswordSignIn(String Email, String Password) { EmailPasswordAuth.EmailPasswordSignIn(Email, Password); }
+      public void AndroidThunkJava_CreateAccount(String Email, String Password) { EmailPasswordAuth.CreateAccount(Email, Password); }
+      public void AndroidThunkJava_SendEmailVerification() { EmailPasswordAuth.SendEmailVerification(); }
 
       // PhoneAuthentication Authentication methods
-      private void AndroidThunkJava_StartPhoneNumberVerification(String PhoneNumber, int Timeout) { PhoneAuth.StartPhoneNumberVerification(PhoneNumber, Timeout); }
-      private void AndroidThunkJava_ResendVerificationCode(String PhoneNumber, int Timeout) { PhoneAuth.ResendVerificationCode(PhoneNumber, Timeout); }
-      private void AndroidThunkJava_VerifyPhoneNumberWithCode(String Code) { PhoneAuth.VerifyPhoneNumberWithCode(Code); }
+      public void AndroidThunkJava_StartPhoneNumberVerification(String PhoneNumber, int Timeout) { PhoneAuth.StartPhoneNumberVerification(PhoneNumber, Timeout); }
+      public void AndroidThunkJava_ResendVerificationCode(String PhoneNumber, int Timeout) { PhoneAuth.ResendVerificationCode(PhoneNumber, Timeout); }
+      public void AndroidThunkJava_VerifyPhoneNumberWithCode(String Code) { PhoneAuth.VerifyPhoneNumberWithCode(Code); }
 
       // Google Authentication methods
-      private void AndroidThunkJava_GoogleSignIn() { GoogleAuth.GoogleSignIn(); }
-      private void AndroidThunkJava_GoogleSignOut() { GoogleAuth.GoogleSignOut(); }
-      private void AndroidThunkJava_GoogleRevokeAccess() { GoogleAuth.GoogleRevokeAccess(); }
+      public void AndroidThunkJava_GoogleSignIn() { GoogleAuth.GoogleSignIn(); }
+      public void AndroidThunkJava_GoogleSignOut() { GoogleAuth.GoogleSignOut(); }
+      public void AndroidThunkJava_GoogleRevokeAccess() { GoogleAuth.GoogleRevokeAccess(); }
 
       // Anonymous Authentication methods
-      private void AndroidThunkJava_AnonymousSignIn() { AnonymousAuth.AnonymousSignIn(); }
-      private void AndroidThunkJava_AnonymousLinkAccount(String Email, String Password) { AnonymousAuth.AnonymousLinkAccount(Email, Password); }
+      public void AndroidThunkJava_AnonymousSignIn() { AnonymousAuth.AnonymousSignIn(); }
+      public void AndroidThunkJava_AnonymousLinkAccount(String Email, String Password) { AnonymousAuth.AnonymousLinkAccount(Email, Password); }
 
       // Facebook Authentication methods
-      private void AndroidThunkJava_FacebookSignIn() { FacebookAuth.FacebookSignIn(); }
-      private void AndroidThunkJava_FacebookSignOut() { FacebookAuth.FacebookSignOut(); }
+      public void AndroidThunkJava_FacebookSignIn() { FacebookAuth.FacebookSignIn(); }
+      public void AndroidThunkJava_FacebookSignOut() { FacebookAuth.FacebookSignOut(); }
 
       // OAuth Authentication methods
-      private void AndroidThunkJava_OAuthSignIn(String ProviderID) { OAuth.OAuthSignIn(ProviderID); }
+      public void AndroidThunkJava_OAuthSignIn(String ProviderID) { OAuth.OAuthSignIn(ProviderID); }
 
       // Firebase methods
-      private void AndroidThunkJava_FirebaseSignOut() { BaseAuthentication.FirebaseAccountSignOut(); }
+      public void AndroidThunkJava_FirebaseSignOut() { BaseAuthentication.FirebaseAccountSignOut(); }
     </insert>
   </gameActivityClassAdditions>
 
