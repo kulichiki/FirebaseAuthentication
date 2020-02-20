@@ -99,7 +99,7 @@ public class GoogleAuthentication
     }
 	
 	// ActivityResult
-	private void ActivityResult(int RequestCode, Intent Data)
+	public void ActivityResult(int RequestCode, Intent Data)
 	{
 		if (RequestCode == GOOGLE_SIGNIN_RC)
 		{

@@ -97,7 +97,7 @@ public class FacebookAuthentication
     }
 	
 	// ActivityResult
-	private void ActivityResult(int RequestCode, int ResultCode, Intent Data)
+	public void ActivityResult(int RequestCode, int ResultCode, Intent Data)
 	{
 		if (RequestCode == FACEBOOK_SIGNIN_RC)
 			FacebookCallbackManager.onActivityResult(RequestCode, ResultCode, Data);

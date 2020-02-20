@@ -16,7 +16,8 @@ UEmailPasswordAuthentication* UEmailPasswordAuthentication::EmailPasswordSignIn(
 		jstring JPassword = Env->NewStringUTF(TCHAR_TO_UTF8(*Password));
 
 		// Call Java method
-		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_EmailPasswordSignIn", "(Ljava/lang/String;Ljava/lang/String;)V", JEmail, JPassword);
+		jmethodID JMethod = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_EmailPasswordSignIn", "(Ljava/lang/String;Ljava/lang/String;)V", false);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethod, JEmail, JPassword);
 
 		// Remove Java references
 		Env->DeleteLocalRef(JEmail);
@@ -36,7 +37,8 @@ UEmailPasswordAuthentication* UEmailPasswordAuthentication::CreateAccount(FStrin
 		jstring JPassword = Env->NewStringUTF(TCHAR_TO_UTF8(*Password));
 
 		// Call Java method
-		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_CreateAccount", "(Ljava/lang/String;Ljava/lang/String;)V", JEmail, JPassword);
+		jmethodID JMethod = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_CreateAccount", "(Ljava/lang/String;Ljava/lang/String;)V", false);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethod, JEmail, JPassword);
 
 		// Remove Java references
 		Env->DeleteLocalRef(JEmail);

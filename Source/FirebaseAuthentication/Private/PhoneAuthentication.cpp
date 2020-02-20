@@ -15,7 +15,8 @@ UPhoneAuthentication* UPhoneAuthentication::StartPhoneNumberVerification(FString
 		jstring JPhoneNumber = Env->NewStringUTF(TCHAR_TO_UTF8(*PhoneNumber));
 
 		// Call Java method
-		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_StartPhoneNumberVerification", "(Ljava/lang/String;I)V", JPhoneNumber, Timeout);
+		jmethodID JMethod = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_StartPhoneNumberVerification", "(Ljava/lang/String;I)V", false);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethod, JPhoneNumber, Timeout);
 
 		// Remove Java reference
 		Env->DeleteLocalRef(JPhoneNumber);
@@ -33,7 +34,8 @@ UPhoneAuthentication* UPhoneAuthentication::ResendVerificationCode(FString Phone
 		jstring JPhoneNumber = Env->NewStringUTF(TCHAR_TO_UTF8(*PhoneNumber));
 
 		// Call Java method
-		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_ResendVerificationCode", "(Ljava/lang/String;I)V", JPhoneNumber, Timeout);
+		jmethodID JMethod = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_ResendVerificationCode", "(Ljava/lang/String;I)V", false);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethod, JPhoneNumber, Timeout);
 
 		// Remove Java reference
 		Env->DeleteLocalRef(JPhoneNumber);
@@ -51,7 +53,8 @@ UPhoneAuthentication* UPhoneAuthentication::VerifyPhoneNumberWithCode(FString Co
 		jstring JCode = Env->NewStringUTF(TCHAR_TO_UTF8(*Code));
 
 		// Call Java method
-		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_VerifyPhoneNumberWithCode", "(Ljava/lang/String;)V", JCode);
+		jmethodID JMethod = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_VerifyPhoneNumberWithCode", "(Ljava/lang/String;)V", false);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethod, JCode);
 
 		// Remove Java reference
 		Env->DeleteLocalRef(JCode);

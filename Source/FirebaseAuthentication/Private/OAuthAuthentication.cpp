@@ -33,7 +33,8 @@ UOAuthAuthentication* UOAuthAuthentication::OAuthSignIn(EOAuthProvider OAuthProv
 		}
 		
 		// Call Java method
-		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_OAuthSignIn", "(Ljava/lang/String;)V", JProviderURL);
+		jmethodID JMethod = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_OAuthSignIn", "(Ljava/lang/String;)V", false);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethod, JProviderURL);
 
 		// Remove Java reference
 		Env->DeleteLocalRef(JProviderURL);

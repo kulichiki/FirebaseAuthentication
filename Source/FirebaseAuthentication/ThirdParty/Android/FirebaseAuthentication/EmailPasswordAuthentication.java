@@ -58,16 +58,19 @@ public class EmailPasswordAuthentication
     public void SendEmailVerification()
     {
         final FirebaseUser User = FirebaseAuthInstance.getCurrentUser();
-        User.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>()
+        if (User != null)
         {
-            @Override
-            public void onComplete(@NonNull Task<Void> Task)
+            User.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>()
             {
-                if (Task.isSuccessful())
-                    NativeEmailPasswordResult(ResultCodes.SUCCESS);
-                else
-                    NativeEmailPasswordResult(ResultCodes.UNKNOWN_ERROR);
-            }
-        });
+                @Override
+                public void onComplete(@NonNull Task<Void> Task)
+                {
+                    if (Task.isSuccessful())
+                        NativeEmailPasswordResult(ResultCodes.SUCCESS);
+                    else
+                        NativeEmailPasswordResult(ResultCodes.UNKNOWN_ERROR);
+                }
+            });
+        }
     }
 }

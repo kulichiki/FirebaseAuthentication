@@ -9,6 +9,7 @@ void FFirebaseAuthenticationModule::ShutdownModule() {}
 void FFirebaseAuthenticationModule::BindEmailPasswordDelegate(UEmailPasswordAuthentication* BindTo) { EmailPasswordDelegate = &BindTo->OnResult; }
 void FFirebaseAuthenticationModule::BroadcastEmailPasswordDelegate(EEmailPasswordAuthenticationResult Result)
 {
+	if (EmailPasswordDelegate == nullptr) return;
 	EmailPasswordDelegate->Broadcast(Result);
 	EmailPasswordDelegate = nullptr;
 }
@@ -17,6 +18,7 @@ void FFirebaseAuthenticationModule::BroadcastEmailPasswordDelegate(EEmailPasswor
 void FFirebaseAuthenticationModule::BindAnonymousDelegate(UAnonymousAuthentication* BindTo) { AnonymousDelegate = &BindTo->OnResult; }
 void FFirebaseAuthenticationModule::BroadcastAnonymousDelegate(EAnonymousAuthenticationResult Result)
 {
+	if (AnonymousDelegate == nullptr) return;
 	AnonymousDelegate->Broadcast(Result);
 	AnonymousDelegate = nullptr;
 }
@@ -25,6 +27,7 @@ void FFirebaseAuthenticationModule::BroadcastAnonymousDelegate(EAnonymousAuthent
 void FFirebaseAuthenticationModule::BindFacebookDelegate(UFacebookAuthentication* BindTo) { FacebookDelegate = &BindTo->OnResult; }
 void FFirebaseAuthenticationModule::BroadcastFacebookDelegate(EFacebookAuthenticationResult Result)
 {
+	if (FacebookDelegate == nullptr) return;
 	FacebookDelegate->Broadcast(Result);
 	FacebookDelegate = nullptr;
 }
@@ -33,6 +36,7 @@ void FFirebaseAuthenticationModule::BroadcastFacebookDelegate(EFacebookAuthentic
 void FFirebaseAuthenticationModule::BindGoogleDelegate(UGoogleAuthentication* BindTo) { GoogleDelegate = &BindTo->OnResult; }
 void FFirebaseAuthenticationModule::BroadcastGoogleDelegate(EGoogleAuthenticationResult Result)
 {
+	if (GoogleDelegate == nullptr) return;
 	GoogleDelegate->Broadcast(Result);
 	GoogleDelegate = nullptr;
 }
@@ -41,6 +45,7 @@ void FFirebaseAuthenticationModule::BroadcastGoogleDelegate(EGoogleAuthenticatio
 void FFirebaseAuthenticationModule::BindOAuthDelegate(UOAuthAuthentication* BindTo) { OAuthDelegate = &BindTo->OnResult; }
 void FFirebaseAuthenticationModule::BroadcastOAuthDelegate(EOAuthAuthenticationResult Result)
 {
+	if (OAuthDelegate == nullptr) return;
 	OAuthDelegate->Broadcast(Result);
 	OAuthDelegate = nullptr;
 }
@@ -49,6 +54,7 @@ void FFirebaseAuthenticationModule::BroadcastOAuthDelegate(EOAuthAuthenticationR
 void FFirebaseAuthenticationModule::BindPhoneDelegate(UPhoneAuthentication* BindTo) { PhoneDelegate = &BindTo->OnResult; }
 void FFirebaseAuthenticationModule::BroadcastPhoneDelegate(EPhoneAuthenticationResult Result)
 {
+	if (PhoneDelegate == nullptr) return;
 	PhoneDelegate->Broadcast(Result);
 	PhoneDelegate = nullptr;
 }

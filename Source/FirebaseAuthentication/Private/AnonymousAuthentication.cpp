@@ -10,7 +10,7 @@
 UAnonymousAuthentication* UAnonymousAuthentication::AnonymousSignIn()
 {
 #if PLATFORM_ANDROID
-	UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_AnonymouslySignIn", "()V");
+	UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_AnonymousSignIn", "()V");
 #endif
 	return NewObject<UAnonymousAuthentication>();
 }
@@ -25,7 +25,8 @@ UAnonymousAuthentication* UAnonymousAuthentication::AnonymousLinkAccount(FString
 		jstring JPassword = Env->NewStringUTF(TCHAR_TO_UTF8(*Password));
 
 		// Call Java method
-		UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_AnonymouslyLinkAccount", "(Ljava/lang/String;Ljava/lang/String;)V", JEmail, JPassword);
+		jmethodID JMethod = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_AnonymousLinkAccount", "(Ljava/lang/String;Ljava/lang/String;)V", false);
+		FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, JMethod, JEmail, JPassword);
 
 		// Remove Java references
 		Env->DeleteLocalRef(JEmail);

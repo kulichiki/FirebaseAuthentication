@@ -47,13 +47,20 @@ public class AnonymousAuthentication
         AuthCredential Credential = EmailAuthProvider.getCredential(Email, Password);
         FirebaseAuthInstance.getCurrentUser().linkWithCredential(Credential).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> Task)
+            try
             {
-                if (Task.isSuccessful())
-                    NativeAnonymousResult(ResultCodes.SUCCESS);
-                else
-                    NativeAnonymousResult(ResultCodes.UNKNOWN_ERROR);
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> Task)
+                {
+                    if (Task.isSuccessful())
+                        NativeAnonymousResult(ResultCodes.SUCCESS);
+                    else
+                        NativeAnonymousResult(ResultCodes.UNKNOWN_ERROR);
+                }
+            }
+            catch (Exception e)
+            {
+                NativeAnonymousResult(ResultCodes.UNKNOWN_ERROR);
             }
         });
     }

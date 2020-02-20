@@ -53,7 +53,6 @@ public class PhoneAuthentication
 				//     detect the incoming verification SMS and perform verification without
 				//     user action.
 				SignInWithPhoneAuthCredential(Credential);
-				NativePhoneResult(ResultCodes.SUCCESS);
 			}
 		
 			@Override
@@ -105,7 +104,7 @@ public class PhoneAuthentication
 
     public void ResendVerificationCode(String PhoneNumber, int Timeout)
     {
-        if (ResendToken != null)
+        try
         {
             PhoneAuthProvider.getInstance().verifyPhoneNumber
             (
@@ -117,8 +116,10 @@ public class PhoneAuthentication
                 ResendToken                             // ForceResendingToken from callbacks
             );
         }
-        else
-            NativePhoneResult(ResultCodes.RESEND_TOKEN_NOT_VALID);
+        catch (Exception e)
+        {
+            NativePhoneResult(ResultCodes.UNKNOWN_ERROR);
+        }
     }
 
     // Internal
