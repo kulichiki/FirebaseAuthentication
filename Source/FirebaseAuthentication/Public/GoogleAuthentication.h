@@ -10,7 +10,7 @@ enum class EGoogleAuthenticationResult : uint8
 	UNKNOWN_ERROR	= 1 UMETA(DisplayName = "Unknown Error")
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGoogleAuthenticationResult, EGoogleAuthenticationResult, Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGoogleAuthenticationResult, EGoogleAuthenticationResult, Result, FString, ServerAuthCode);
 
 UCLASS()
 class FIREBASEAUTHENTICATION_API UGoogleAuthentication : public UBlueprintAsyncActionBase

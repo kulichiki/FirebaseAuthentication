@@ -39,9 +39,19 @@ void UGoogleAuthentication::Activate()
 }
 
 #if PLATFORM_ANDROID
-JNI_METHOD void Java_com_thegetaway_firebaseauthentication_GoogleAuthentication_NativeGoogleResult(JNIEnv* jenv, jobject thiz, jint Result)
+JNI_METHOD void Java_com_kulichin_firebaseauthentication_GoogleAuthentication_NativeGoogleResult(JNIEnv* jenv, jobject thiz, jint Result, jstring ServerAuthCodeResult)
 {
 	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
-		Module->BroadcastGoogleDelegate(EGoogleAuthenticationResult(Result));
+	{
+		const char* ServerAuthCodeChars = jenv->GetStringUTFChars(ServerAuthCodeResult, 0);
+
+		FString ServerAuthCode;
+		ServerAuthCode = FString(UTF8_TO_TCHAR(ServerAuthCodeResult));
+
+		jenv->ReleaseStringUTFChars(ServerAuthCodeResult, ServerAuthCodeChars);
+
+		
+		Module->BroadcastGoogleDelegate(EGoogleAuthenticationResult(Result), ServerAuthCode);
+	}
 }
 #endif

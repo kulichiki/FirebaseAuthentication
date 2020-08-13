@@ -18,11 +18,6 @@
 			"Name": "FirebaseAuthentication",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "FirebaseAuthenticationEditor",
-			"Type": "Editor",
-			"LoadingPhase": "Default"
 		}
 	]
 }

@@ -1,4 +1,4 @@
-package com.thegetaway.firebaseauthentication;
+package com.kulichin.firebaseauthentication;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class GoogleAuthentication
 {
-    private static native void NativeGoogleResult(int Result);
+    private static native void NativeGoogleResult(int Result, String ServerAuthCodeResult);
     private GoogleSignInClient SignInClient;
     private FirebaseAuth FirebaseAuthInstance;
     private Activity MainActivity;
@@ -63,7 +63,7 @@ public class GoogleAuthentication
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeGoogleResult(ResultCodes.SUCCESS);
+                NativeGoogleResult(ResultCodes.SUCCESS, "");
             }
         });
     }
@@ -76,7 +76,7 @@ public class GoogleAuthentication
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeGoogleResult(ResultCodes.SUCCESS);
+                NativeGoogleResult(ResultCodes.SUCCESS, "");
             }
         });
     }
@@ -85,15 +85,21 @@ public class GoogleAuthentication
     private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
     {
         AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
+        final String AuthCode = SignInAccount.getServerAuthCode();
+
         FirebaseAuthInstance.signInWithCredential(Credential).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
             public void onComplete(@NonNull Task<AuthResult> Task)
             {
                 if (Task.isSuccessful())
-                    NativeGoogleResult(ResultCodes.SUCCESS);
+                {
+                    NativeGoogleResult(ResultCodes.SUCCESS, AuthCode);
+                }
                 else
-                    NativeGoogleResult(ResultCodes.UNKNOWN_ERROR);
+                {
+                    NativeGoogleResult(ResultCodes.UNKNOWN_ERROR, "");
+                }
             }
         });
     }
@@ -108,11 +114,12 @@ public class GoogleAuthentication
 			{
 				GoogleSignInAccount SignInAccount = Task.getResult(ApiException.class);
 				FirebaseAuthWithGoogle(SignInAccount);
+
 			}
 			catch (ApiException e)
 			{
-				NativeGoogleResult(ResultCodes.UNKNOWN_ERROR);
+				NativeGoogleResult(ResultCodes.UNKNOWN_ERROR, "");
 			}
-		}
+        }
 	}
 }
