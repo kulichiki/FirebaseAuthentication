@@ -11,6 +11,8 @@ void FFirebaseAuthenticationModule::BroadcastGoogleDelegate(const EGoogleAuthent
 {
 	if (GoogleDelegate == nullptr) return;
 	GoogleDelegate->Broadcast(Result, ServerAuthCode);
+
+	// Clear
 	GoogleDelegate = nullptr;
 }
 

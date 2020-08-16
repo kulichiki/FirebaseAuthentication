@@ -45,12 +45,9 @@ JNI_METHOD void Java_com_kulichin_firebaseauthentication_GoogleAuthentication_Na
 	{
 		const char* ServerAuthCodeChars = jenv->GetStringUTFChars(ServerAuthCodeResult, 0);
 
-		FString ServerAuthCode;
-		ServerAuthCode = FString(UTF8_TO_TCHAR(ServerAuthCodeResult));
-
+		FString ServerAuthCode = FString(UTF8_TO_TCHAR(ServerAuthCodeChars));
 		jenv->ReleaseStringUTFChars(ServerAuthCodeResult, ServerAuthCodeChars);
 
-		
 		Module->BroadcastGoogleDelegate(EGoogleAuthenticationResult(Result), ServerAuthCode);
 	}
 }
