@@ -6,49 +6,70 @@
 	#include "Android/AndroidApplication.h"
 #endif
 
-UGoogleAuthentication* UGoogleAuthentication::GoogleSignIn()
+UGoogleCodeResult* UGoogleCodeResult::GoogleSignIn()
 {
 #if PLATFORM_ANDROID
 	UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_GoogleSignIn", "()V");
+	return NewObject<UGoogleCodeResult>();
 #endif
-	return NewObject<UGoogleAuthentication>();
+	
+	return nullptr;
 }
 
-UGoogleAuthentication* UGoogleAuthentication::GoogleSignOut()
+UGoogleResult* UGoogleResult::GoogleSignOut()
 {
 #if PLATFORM_ANDROID
 	UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_GoogleSignOut", "()V");
+	return NewObject<UGoogleResult>();
 #endif
-	return NewObject<UGoogleAuthentication>();
+
+	return nullptr;
 }
 
-UGoogleAuthentication* UGoogleAuthentication::GoogleRevokeAccess()
+UGoogleResult* UGoogleResult::GoogleRevokeAccess()
 {
 #if PLATFORM_ANDROID
 	UAuthenticationLibrary::CallVoidMethod("AndroidThunkJava_GoogleRevokeAccess", "()V");
+	return NewObject<UGoogleResult>();
 #endif
-	return NewObject<UGoogleAuthentication>();
+
+	return nullptr;
 }
 
-void UGoogleAuthentication::Activate()
+void UGoogleCodeResult::Activate()
 {
 #if PLATFORM_ANDROID
 	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
-		Module->BindGoogleDelegate(this);
+	{
+		Module->BindGoogleCodeResult(this);
+	}
+#endif
+}
+
+void UGoogleResult::Activate()
+{
+#if PLATFORM_ANDROID
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+	{
+		Module->BindGoogleResult(this);
+	}
 #endif
 }
 
 #if PLATFORM_ANDROID
-JNI_METHOD void Java_com_kulichin_firebaseauthentication_GoogleAuthentication_NativeGoogleResult(JNIEnv* jenv, jobject thiz, jint Result, jstring ServerAuthCodeResult)
+JNI_METHOD void Java_com_kulichin_firebaseauthentication_GoogleAuthentication_NativeGoogleResult(JNIEnv* jenv, jobject thiz)
 {
 	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
 	{
-		const char* ServerAuthCodeChars = jenv->GetStringUTFChars(ServerAuthCodeResult, 0);
+		Module->BroadcastGoogleResult();
+	}
+}
 
-		FString ServerAuthCode = FString(UTF8_TO_TCHAR(ServerAuthCodeChars));
-		jenv->ReleaseStringUTFChars(ServerAuthCodeResult, ServerAuthCodeChars);
-
-		Module->BroadcastGoogleDelegate(EGoogleAuthenticationResult(Result), ServerAuthCode);
+JNI_METHOD void Java_com_kulichin_firebaseauthentication_GoogleAuthentication_NativeGoogleCodeResult(JNIEnv* jenv, jobject thiz, jint Code)
+{
+	if (FFirebaseAuthenticationModule* Module = FFirebaseAuthenticationModule::GetModule())
+	{
+		Module->BroadcastGoogleCodeResult(EGoogleAuthenticationResult(Code));
 	}
 }
 #endif

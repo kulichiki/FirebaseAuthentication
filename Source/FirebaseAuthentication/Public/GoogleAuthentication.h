@@ -10,10 +10,11 @@ enum class EGoogleAuthenticationResult : uint8
 	UNKNOWN_ERROR	= 1 UMETA(DisplayName = "Unknown Error")
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGoogleAuthenticationResult, EGoogleAuthenticationResult, Result, FString, ServerAuthCode);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGoogleAuthenticationResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGoogleAuthenticationCodeResult, EGoogleAuthenticationResult, Code);
 
 UCLASS()
-class FIREBASEAUTHENTICATION_API UGoogleAuthentication : public UBlueprintAsyncActionBase
+class FIREBASEAUTHENTICATION_API UGoogleResult : public UBlueprintAsyncActionBase
 {
 	GENERATED_BODY()
 
@@ -21,14 +22,26 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FGoogleAuthenticationResult OnResult;
 
-	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|GoogleAuthentication", meta = (BlueprintInternalUseOnly = "true"))
-	static UGoogleAuthentication* GoogleSignIn();
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication | GoogleAuthentication", meta = (BlueprintInternalUseOnly = "true"))
+	static UGoogleResult* GoogleSignOut();
 
-	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|GoogleAuthentication", meta = (BlueprintInternalUseOnly = "true"))
-	static UGoogleAuthentication* GoogleSignOut();
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication | GoogleAuthentication", meta = (BlueprintInternalUseOnly = "true"))
+	static UGoogleResult* GoogleRevokeAccess();
 
-	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication|GoogleAuthentication", meta = (BlueprintInternalUseOnly = "true"))
-	static UGoogleAuthentication* GoogleRevokeAccess();
+	void Activate() override;
+};
+
+UCLASS()
+class FIREBASEAUTHENTICATION_API UGoogleCodeResult : public UBlueprintAsyncActionBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FGoogleAuthenticationCodeResult OnResult;
+
+	UFUNCTION(BlueprintCallable, Category = "FirebaseAuthentication | GoogleAuthentication", meta = (BlueprintInternalUseOnly = "true"))
+	static UGoogleCodeResult* GoogleSignIn();
 
 	void Activate() override;
 };

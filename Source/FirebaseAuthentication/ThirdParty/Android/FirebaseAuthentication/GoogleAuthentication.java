@@ -19,10 +19,15 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class GoogleAuthentication
 {
-    private static native void NativeGoogleResult(int Result, String ServerAuthCodeResult);
+    private static native void NativeGoogleResult();
+    private static native void NativeGoogleCodeResult(int Code);
+
     private GoogleSignInClient SignInClient;
     private FirebaseAuth FirebaseAuthInstance;
     private Activity MainActivity;
+
+    private String IDToken;
+    private String ServerAuthCode;
 
     private static final int GOOGLE_SIGNIN_RC = 9001;
 
@@ -45,7 +50,6 @@ public class GoogleAuthentication
 		GoogleSignInOptions SignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 											.requestIdToken(WebClientID)
                                             .requestServerAuthCode(WebClientID)
-											.requestEmail()
 											.build();
 		this.SignInClient = GoogleSignIn.getClient(this.MainActivity, SignInOptions);
     }
@@ -64,7 +68,7 @@ public class GoogleAuthentication
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeGoogleResult(ResultCodes.SUCCESS, "");
+                NativeGoogleResult();
             }
         });
     }
@@ -77,17 +81,23 @@ public class GoogleAuthentication
             @Override
             public void onComplete(@NonNull Task<Void> Task)
             {
-                NativeGoogleResult(ResultCodes.SUCCESS, "");
+                NativeGoogleResult();
             }
         });
+    }
+
+    public String GoogleGetServerAuthCode()
+    {
+        return this.ServerAuthCode;
     }
 
     // Internal function
     private void FirebaseAuthWithGoogle(GoogleSignInAccount SignInAccount)
     {
-        AuthCredential Credential = GoogleAuthProvider.getCredential(SignInAccount.getIdToken(), null);
-        final String AuthCode = SignInAccount.getServerAuthCode();
+        this.IDToken = SignInAccount.getIdToken();
+        this.ServerAuthCode = SignInAccount.getServerAuthCode();
 
+        AuthCredential Credential = GoogleAuthProvider.getCredential(this.IDToken, null);
         FirebaseAuthInstance.signInWithCredential(Credential).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
@@ -95,11 +105,11 @@ public class GoogleAuthentication
             {
                 if (Task.isSuccessful())
                 {
-                    NativeGoogleResult(ResultCodes.SUCCESS, AuthCode);
+                    NativeGoogleCodeResult(ResultCodes.SUCCESS);
                 }
                 else
                 {
-                    NativeGoogleResult(ResultCodes.UNKNOWN_ERROR, "");
+                    NativeGoogleCodeResult(ResultCodes.UNKNOWN_ERROR);
                 }
             }
         });
@@ -119,7 +129,7 @@ public class GoogleAuthentication
 			}
 			catch (ApiException e)
 			{
-				NativeGoogleResult(ResultCodes.UNKNOWN_ERROR, "");
+				NativeGoogleCodeResult(ResultCodes.UNKNOWN_ERROR);
 			}
         }
 	}

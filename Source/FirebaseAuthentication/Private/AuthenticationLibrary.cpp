@@ -5,11 +5,6 @@
 	#include "Android/AndroidApplication.h"
 #endif
 
-void UAuthenticationLibrary::AnonymousSignOut() { FirebaseSignOut(); }
-void UAuthenticationLibrary::EmailPasswordSignOut() { FirebaseSignOut(); }
-void UAuthenticationLibrary::PhoneSignOut() { FirebaseSignOut(); }
-void UAuthenticationLibrary::OAuthSignOut() { FirebaseSignOut(); }
-
 void UAuthenticationLibrary::CallVoidMethod(const char* Name, const char* Signature, ...)
 {
 #if PLATFORM_ANDROID
@@ -28,16 +23,22 @@ void UAuthenticationLibrary::CallVoidMethod(const char* Name, const char* Signat
 #endif
 }
 
-void UAuthenticationLibrary::FacebookSignOut()
+FString UAuthenticationLibrary::GoogleGetServerAuthCode()
 {
 #if PLATFORM_ANDROID
-	CallVoidMethod("AndroidThunkJava_FacebookSignOut", "()V");
-#endif
-}
+	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
+	{
+		jmethodID MethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_GoogleGetServerAuthCode", "()Ljava/lang/String;", false);
+		jstring String = (jstring)FJavaWrapper::CallObjectMethod(Env, FJavaWrapper::GameActivityThis, MethodID);
+		
+		const char* Chars = Env->GetStringUTFChars(String, 0);
+		const FString ServerAuthCode = FString(Chars);
 
-void UAuthenticationLibrary::FirebaseSignOut()
-{
-#if PLATFORM_ANDROID
-	CallVoidMethod("AndroidThunkJava_FirebaseSignOut", "()V");
+		Env->ReleaseStringUTFChars(String, Chars);
+		Env->DeleteLocalRef(String);
+
+		return ServerAuthCode;
+	}
 #endif
+	return "";
 }

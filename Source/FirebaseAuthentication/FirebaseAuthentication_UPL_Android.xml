@@ -64,6 +64,7 @@
       public void AndroidThunkJava_GoogleSignIn() { GoogleAuth.GoogleSignIn(); }
       public void AndroidThunkJava_GoogleSignOut() { GoogleAuth.GoogleSignOut(); }
       public void AndroidThunkJava_GoogleRevokeAccess() { GoogleAuth.GoogleRevokeAccess(); }
+      public String AndroidThunkJava_GoogleGetServerAuthCode() { return GoogleAuth.GoogleGetServerAuthCode(); }
     </insert>
   </gameActivityClassAdditions>
 

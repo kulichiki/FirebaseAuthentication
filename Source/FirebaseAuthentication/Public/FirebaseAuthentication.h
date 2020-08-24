@@ -9,14 +9,16 @@ class FFirebaseAuthenticationModule : public IModuleInterface
 public:
 	void StartupModule() override;
 	void ShutdownModule() override;
+	static FFirebaseAuthenticationModule* GetModule();
 
 	// Google
-	void BindGoogleDelegate(UGoogleAuthentication* BindTo);
-	void BroadcastGoogleDelegate(const EGoogleAuthenticationResult Result, const FString ServerAuthCode);
-
-	static FFirebaseAuthenticationModule* GetModule();
+	void BindGoogleResult(UGoogleResult* GoogleResult);
+	void BindGoogleCodeResult(UGoogleCodeResult* GoogleCodeResult);
+	void BroadcastGoogleResult();
+	void BroadcastGoogleCodeResult(const EGoogleAuthenticationResult Code);
 
 private:
 	// Delegates
-	FGoogleAuthenticationResult* GoogleDelegate;
+	TSharedPtr<FGoogleAuthenticationResult> GoogleResultDelegate;
+	TSharedPtr<FGoogleAuthenticationCodeResult> GoogleCodeResultDelegate;
 };
