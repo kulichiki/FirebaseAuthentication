@@ -48,6 +48,7 @@ public class GoogleAuthentication
 
         // Initialize Google Sign In
 		GoogleSignInOptions SignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                            .requestEmail()
 											.requestIdToken(WebClientID)
                                             .requestServerAuthCode(WebClientID)
 											.build();
