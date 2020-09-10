@@ -4,3 +4,6 @@ https://firebase.googleblog.com/2017/03/take-control-of-your-firebase-init-on.ht
 https://docs.microsoft.com/ru-ru/xamarin/android/deploy-test/signing/keystore-signature?tabs=windows
 
 Написать систему с AuthProvider'ами
+
+Никогда не вызывать из Widgetов эти функции, смотреть:
+#define SLATE_CROSS_THREAD_CHECK() checkf(IsInGameThread() || IsInSlateThread(), TEXT("Slate can only be accessed from the GameThread or the SlateLoadingThread!"));
